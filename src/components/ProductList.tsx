@@ -17,6 +17,7 @@ const ProductList = () => {
   const title = searchParams.get("title") || "All products";
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [sortedProducts, setSortedProducts] = useState<ProductProps[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
   const [sortBy, setSortBy] = useState("No sorting");
   const [pageFirst, setPageFirst] = useState(0);
   const [priceSliderValue, setPriceSliderValue] = useState([0, 0]);
@@ -50,6 +51,7 @@ const ProductList = () => {
       .then((prodArray: ProductProps[]) => {
         setProducts(prodArray);
         setSortedProducts(prodArray);
+        setFilteredProducts(prodArray);
       })
       .catch((error) => console.error(error));
   }, [type]);
@@ -69,25 +71,27 @@ const ProductList = () => {
   const setSort = (sort: string) => {
     setSortBy(sort);
     console.log(sort);
-    sort === "Name (Ascending)" &&
-      setSortedProducts(
-        [...products].sort((a, b) => a.name.localeCompare(b.name)),
-      );
-    sort === "Name (Descending)" &&
-      setSortedProducts(
-        [...products].sort((a, b) => b.name.localeCompare(a.name)),
-      );
-    sort === "Price (Ascending)" &&
-      setSortedProducts([...products].sort((a, b) => a.price - b.price));
-    sort === "Price (Descending)" &&
-      setSortedProducts([...products].sort((a, b) => b.price - a.price));
-    sort === "No sorting" && setSortedProducts(products);
+    let sortedProducts: ProductProps[] = [];
+    if (sort === "Name (Ascending)") {
+      sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (sort === "Name (Descending)") {
+      sortedProducts = [...products].sort((a, b) => b.name.localeCompare(a.name));
+    }
+    if (sort === "Price (Ascending)") {
+      sortedProducts = [...products].sort((a, b) => a.price - b.price);
+    }
+    if (sort === "Price (Descending)") {
+      sortedProducts = [...products].sort((a, b) => b.price - a.price);
+    }
+    setSortedProducts(sortedProducts);
+    setFilteredProducts(sortedProducts);
     setPageFirst(0);
   };
 
   const pageProducts = useMemo(
-    () => sortedProducts.slice(pageFirst, pageFirst + rows),
-    [pageFirst, rows, sortedProducts],
+    () => filteredProducts.slice(pageFirst, pageFirst + rows),
+    [pageFirst, rows, filteredProducts],
   );
 
   const onPageChange = (event) => {
@@ -102,6 +106,23 @@ const ProductList = () => {
       setPriceSliderValue([min, max]);
     }
   };
+
+  const onApplyFilters = () => {
+    console.log("Stock filter:",inStockFilter)
+    console.log("Price Min:",priceSliderValue[0])
+    console.log("Price Max:",priceSliderValue[1])
+    const filteredProducts = sortedProducts.filter((product) => {
+      if (inStockFilter && !product.inStock) {
+        return false;
+      }
+
+      const price = product.price;
+      return price >= priceSliderValue[0] && price <= priceSliderValue[1];
+    });
+
+    setFilteredProducts(filteredProducts);
+
+  }
 
   return (
     <>
@@ -133,11 +154,12 @@ const ProductList = () => {
                 />
               </div>
               <div className="flex flex-row align-items-center justify-content-start gap-3 ml-4">
-                <Checkbox inputId="stock-filter"></Checkbox>
+                <Checkbox checked={inStockFilter} onChange={() => setInStockFilter(!inStockFilter)} inputId="stock-filter"></Checkbox>
                 <label htmlFor="stock-filter">In stock</label>
               </div>
-              <div className="mb-4">
-                <Button>Apply filters</Button>
+              <div className="flex flex-row justify-content-center gap-3 mb-4">
+                <Button onClick={onApplyFilters}>Apply filters</Button>
+                <Button onClick={onApplyFilters} outlined >Reset filters</Button>
               </div>
             </div>
           </Card>
