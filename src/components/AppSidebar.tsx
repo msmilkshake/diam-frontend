@@ -3,22 +3,27 @@ import { Sidebar } from "primereact/sidebar";
 import React, { useEffect, useState } from "react";
 import ApiService from "../services/ApiService.ts";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link, useNavigate } from "react-router-dom";
 
 type SidebarItem = {
   category: string;
   icon: string;
-  items: [string];
+  items: [{ id: number; name: string }];
 };
 
 const AppSidebar = ({ visible, setVisible }) => {
+  const navigate = useNavigate();
   const [menuItems, setMenuItems] = useState<any[]>([]);
 
   const itemRenderer = (item) => {
     return (
-        <>
-          <i className={`bi ${item.icon}`}></i>
-          <span>{"  "}{item.category}</span>
-        </>
+      <>
+        <i className={`bi ${item.icon}`}></i>
+        <span>
+          {"  "}
+          {item.category}
+        </span>
+      </>
     );
   };
 
@@ -30,8 +35,11 @@ const AppSidebar = ({ visible, setVisible }) => {
           return {
             label: itemRenderer(item),
             items: item.items.map((subItem) => ({
-              label: subItem,
-
+              label: subItem.name,
+              command: () => {
+                navigate(`/products?type=${subItem.id}&title=${subItem.name}`);
+                setVisible(false);
+              },
             })),
           };
         }),
@@ -42,12 +50,12 @@ const AppSidebar = ({ visible, setVisible }) => {
 
   return (
     <Sidebar
-        visible={visible}
-        onHide={() => setVisible(false)}
-        style={{width: "24rem"}}
+      visible={visible}
+      onHide={() => setVisible(false)}
+      style={{ width: "24rem" }}
     >
       <h4>Categorias</h4>
-      <PanelMenu model={menuItems}/>
+      <PanelMenu model={menuItems} />
     </Sidebar>
   );
 };

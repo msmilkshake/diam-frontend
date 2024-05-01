@@ -16,6 +16,13 @@ const AppNavbar = ({ setVisible }) => {
             },
         },
         {
+            label: "Products",
+            icon: "pi pi-desktop",
+            command: () => {
+                navigate("/products");
+            },
+        },
+        {
             label: "Contact",
             icon: "pi pi-star",
             command: () => {
@@ -29,17 +36,10 @@ const AppNavbar = ({ setVisible }) => {
                 navigate("/about");
             },
         },
-        {
-            label: "About",
-            icon: "pi pi-search",
-            command: () => {
-                navigate("/about");
-            },
-        },
     ];
 
     return (
-        <div className="card py-3">
+        <div className="sticky top-0 z-5">
             <Menubar
                 style={{border: 'none', boxShadow: 'none'}}
                 model={items}

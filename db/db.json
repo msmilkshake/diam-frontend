@@ -209,5 +209,29 @@
       "label": "Leitores de Cartões",
       "icon": "pi pi-id-card"
     }
+  ],
+  "product": [
+    {
+      "id": 1,
+      "name": "Test Product",
+      "imageurl": "",
+      "description": "Bruteadipisci quidam bibendum vestibulum salutatus expetenda adhuc.  Finibusomittantur magnis adipiscing eirmod deserunt mazim legimus platea mandamus.  Detraxitverear inani elaboraret purus interesset repudiandae nonumy verterem imperdiet.  Erremutinam nostrum cubilia volumus delectus dissentiunt leo hinc explicari luptatum autem adipiscing.  Laudemei sadipscing utroque habemus veri iisque verear error cras voluptatibus definitiones quaestio fuisset maecenas.  Atpertinax venenatis vivendo propriae persequeris fuisset repudiare periculis quidam eirmod ocurreret splendide propriae efficitur consectetuer dissentiunt eget.\n\nNamgravida torquent vim fabellas sapien varius vero eros natum suavitate legere saperet utinam nihil persequeris vidisse neque lobortis solum.  Duisdeseruisse ligula agam.  Solumipsum sociis solet nec brute vituperata adversarium.  Sollicitudincomprehensam pretium vidisse himenaeos prodesset intellegebat tempus legimus himenaeos referrentur quas tincidunt audire accommodare nostra.  Elitreuismod senserit.  Andoming unum postea aperiri perpetua petentium pericula referrentur sanctus tamquam per adipisci maximus accumsan graecis.\n\nDiamdignissim mauris verterem interesset adolescens aperiri meliore hendrerit idque te blandit.  Mollissociosqu expetendis.  Verearrutrum ipsum errem vidisse tacimates sumo mucius ultrices adipiscing persecuti errem mauris nec efficitur postulant vivendo.  Expetendisridiculus ipsum litora quem reprimique maluisset gubergren neque unum luctus vivamus finibus pericula option.",
+      "price:": 79.9,
+      "stars": 4.33
+    }
+  ],
+  "reviews": [
+    {
+      "comment": "audire purus deserunt duo aliquip sadipscing impetus",
+      "stars": 5
+    },
+    {
+      "comment": "doctus adversarium eam gloriatur sit",
+      "stars": 4
+    },
+    {
+      "comment": "alia similique deseruisse massa torquent ancillae in",
+      "stars": 4
+    }
   ]
 }
