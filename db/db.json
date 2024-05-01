@@ -1,0 +1,213 @@
+{
+  "api": {
+    "tipoProduto": [
+      {
+        "id": 1,
+        "label": "Computadores e Software",
+        "icon": "Computer"
+      },
+      {
+        "id": 2,
+        "label": "Mobilidade",
+        "icon": "Smartphone"
+      },
+      {
+        "id": 3,
+        "label": "Componentes",
+        "icon": "Memory"
+      },
+      {
+        "id": 4,
+        "label": "Imagem e Som",
+        "icon": "Monitor"
+      },
+      {
+        "id": 5,
+        "label": "Periféricos",
+        "icon": "Keyboard"
+      },
+      {
+        "id": 6,
+        "label": "Armazenamento",
+        "icon": "Storage"
+      }
+    ]
+  },
+  "categoriaProduto": [
+    {
+      "id": 1,
+      "label": "Computadores Desktop",
+      "icon": "DesktopWindows"
+    },
+    {
+      "id": 2,
+      "label": "Computadores Laptop",
+      "icon": "Laptop"
+    },
+    {
+      "id": 3,
+      "label": "Mini Computadores e Barebones",
+      "icon": "Laptop"
+    },
+    {
+      "id": 4,
+      "label": "Servidores",
+      "icon": "Dns"
+    },
+    {
+      "id": 5,
+      "label": "Microcomputadores",
+      "icon": "DeveloperBoard"
+    },
+    {
+      "id": 6,
+      "label": "Smartphones e Telemóveis",
+      "icon": "pi pi-mobile"
+    },
+    {
+      "id": 7,
+      "label": "Wearables",
+      "icon": "pi pi-clock"
+    },
+    {
+      "id": 8,
+      "label": "Mobile Audio",
+      "icon": "pi pi-volume-up"
+    },
+    {
+      "id": 9,
+      "label": "Tablets",
+      "icon": "pi pi-tablet"
+    },
+    {
+      "id": 10,
+      "label": "Livros Eletrónicos",
+      "icon": "pi pi-book"
+    },
+    {
+      "id": 11,
+      "label": "Telefones Fixos",
+      "icon": "pi pi-phone"
+    },
+    {
+      "id": 12,
+      "label": "Processadores",
+      "icon": "pi pi-microchip"
+    },
+    {
+      "id": 13,
+      "label": "Motherboards",
+      "icon": "pi pi-briefcase"
+    },
+    {
+      "id": 14,
+      "label": "Placas Gráficas",
+      "icon": "pi pi-image"
+    },
+    {
+      "id": 15,
+      "label": "Memórias RAM",
+      "icon": "pi pi-memory"
+    },
+    {
+      "id": 16,
+      "label": "Fontes Alimentação",
+      "icon": "pi pi-battery"
+    },
+    {
+      "id": 17,
+      "label": "Caixas de Computador",
+      "icon": "pi pi-archive"
+    },
+    {
+      "id": 18,
+      "label": "Placas de som",
+      "icon": "pi pi-volume-down"
+    },
+    {
+      "id": 19,
+      "label": "Coolers CPU",
+      "icon": "pi pi-fan"
+    },
+    {
+      "id": 20,
+      "label": "Monitores",
+      "icon": "pi pi-desktop"
+    },
+    {
+      "id": 21,
+      "label": "Televisores",
+      "icon": "pi pi-desktop"
+    },
+    {
+      "id": 22,
+      "label": "Projeção de Imagem",
+      "icon": "pi pi-image"
+    },
+    {
+      "id": 23,
+      "label": "Fotografia e Vídeo",
+      "icon": "pi pi-camera"
+    },
+    {
+      "id": 24,
+      "label": "Home Audio",
+      "icon": "pi pi-volume-up"
+    },
+    {
+      "id": 25,
+      "label": "PC Audio",
+      "icon": "pi pi-volume-up"
+    },
+    {
+      "id": 26,
+      "label": "Ratos",
+      "icon": "pi pi-mouse"
+    },
+    {
+      "id": 27,
+      "label": "Teclados",
+      "icon": "pi pi-keyboard"
+    },
+    {
+      "id": 28,
+      "label": "Simulação e Controladores Gaming",
+      "icon": "pi pi-gamepad"
+    },
+    {
+      "id": 29,
+      "label": "Conversão Web",
+      "icon": "pi pi-globe"
+    },
+    {
+      "id": 30,
+      "label": "Gravação e Controlo de Produção",
+      "icon": "pi pi-video"
+    },
+    {
+      "id": 31,
+      "label": "Armazenamento Interno",
+      "icon": "pi pi-hdd"
+    },
+    {
+      "id": 32,
+      "label": "Armazenamento Externo",
+      "icon": "pi pi-cloud-download"
+    },
+    {
+      "id": 33,
+      "label": "Armazenamento em Rede",
+      "icon": "pi pi-network-wired"
+    },
+    {
+      "id": 34,
+      "label": "Pen Drives",
+      "icon": "pi pi-sd-card"
+    },
+    {
+      "id": 35,
+      "label": "Leitores de Cartões",
+      "icon": "pi pi-id-card"
+    }
+  ]
+}
