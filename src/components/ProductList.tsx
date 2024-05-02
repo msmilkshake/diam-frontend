@@ -11,6 +11,16 @@ import { Slider } from "primereact/slider";
 import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 
+const sortOptions =  [
+      "Name (Ascending)",
+      "Name (Descending)",
+      "Price (Ascending)",
+      "Price (Descending)",
+      "No sorting",
+    ];
+
+const cardsPerPage =  9;
+
 const ProductList = () => {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
@@ -23,19 +33,6 @@ const ProductList = () => {
   const [priceSliderValue, setPriceSliderValue] = useState([0, 0]);
   const [productMinMax, setproductMinMax] = useState([0, 0]);
   const [inStockFilter, setInStockFilter] = useState(false);
-
-  const rows = useMemo(() => 9, []);
-
-  const sortOptions = useMemo(
-    () => [
-      "Name (Ascending)",
-      "Name (Descending)",
-      "Price (Ascending)",
-      "Price (Descending)",
-      "No sorting",
-    ],
-    [],
-  );
 
   const getProducts = async (type?: string) => {
     let url = "/products";
@@ -68,30 +65,44 @@ const ProductList = () => {
     setPriceSliderValue([minPrice, maxPrice]);
   }, [products]);
 
-  const setSort = (sort: string) => {
+  const handleSortChange = (sort: string) => {
     setSortBy(sort);
     console.log(sort);
     let sortedProducts: ProductProps[] = [];
-    if (sort === "Name (Ascending)") {
+    if (sort === sortOptions[0]) {
       sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name));
     }
-    if (sort === "Name (Descending)") {
+    if (sort === sortOptions[1]) {
       sortedProducts = [...products].sort((a, b) => b.name.localeCompare(a.name));
     }
-    if (sort === "Price (Ascending)") {
-      sortedProducts = [...products].sort((a, b) => a.price - b.price);
+    if (sort === sortOptions[2]) {
+      sortedProducts = [...products].sort((a, b) => {
+        const aPrice: number = a.discountPrice || a.price
+        const bPrice: number = b.discountPrice || b.price
+        return aPrice - bPrice;
+      });
     }
-    if (sort === "Price (Descending)") {
-      sortedProducts = [...products].sort((a, b) => b.price - a.price);
+    if (sort === sortOptions[3]) {
+      sortedProducts = [...products].sort((a, b) => {
+        const aPrice: number = a.discountPrice || a.price
+        const bPrice: number = b.discountPrice || b.price
+        return bPrice - aPrice;
+      });
+    }
+    if (sort === sortOptions[4]) {
+      sortedProducts = [...products]
     }
     setSortedProducts(sortedProducts);
-    setFilteredProducts(sortedProducts);
     setPageFirst(0);
   };
 
+  useEffect(() => {
+    applyFilters()
+  }, [sortedProducts]);
+
   const pageProducts = useMemo(
-    () => filteredProducts.slice(pageFirst, pageFirst + rows),
-    [pageFirst, rows, filteredProducts],
+    () => filteredProducts.slice(pageFirst, pageFirst + cardsPerPage),
+    [pageFirst, cardsPerPage, filteredProducts],
   );
 
   const onPageChange = (event) => {
@@ -107,7 +118,7 @@ const ProductList = () => {
     }
   };
 
-  const onApplyFilters = () => {
+  const applyFilters = () => {
     console.log("Stock filter:",inStockFilter)
     console.log("Price Min:",priceSliderValue[0])
     console.log("Price Max:",priceSliderValue[1])
@@ -116,12 +127,17 @@ const ProductList = () => {
         return false;
       }
 
-      const price = product.price;
+      const price = product.discountPrice || product.price;
       return price >= priceSliderValue[0] && price <= priceSliderValue[1];
     });
 
     setFilteredProducts(filteredProducts);
+  }
 
+  const resetFilters = () => {
+    setInStockFilter(false);
+    setPriceSliderValue([productMinMax[0], productMinMax[1]]);
+    setFilteredProducts(sortedProducts)
   }
 
   return (
@@ -158,8 +174,8 @@ const ProductList = () => {
                 <label htmlFor="stock-filter">In stock</label>
               </div>
               <div className="flex flex-row justify-content-center gap-3 mb-4">
-                <Button onClick={onApplyFilters}>Apply filters</Button>
-                <Button onClick={onApplyFilters} outlined >Reset filters</Button>
+                <Button onClick={applyFilters}>Apply filters</Button>
+                <Button onClick={resetFilters} outlined >Reset filters</Button>
               </div>
             </div>
           </Card>
@@ -170,7 +186,7 @@ const ProductList = () => {
             <Dropdown
               options={sortOptions}
               value={sortBy}
-              onChange={(e) => setSort(e.value)}
+              onChange={(e) => handleSortChange(e.value)}
             ></Dropdown>
           </div>
           <div className="grid m-2">
@@ -181,8 +197,8 @@ const ProductList = () => {
           <Paginator
             className="mx-4"
             first={pageFirst}
-            rows={rows}
-            totalRecords={sortedProducts.length}
+            rows={cardsPerPage}
+            totalRecords={filteredProducts.length}
             onPageChange={onPageChange}
           />
         </div>
