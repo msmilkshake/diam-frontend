@@ -17,7 +17,7 @@ const ContactPage = () => {
   const [product, setProduct] = useState<ProductProps>();
 
   const getProduct = async (id?: number) => {
-    return await ApiService.get("/products?id="+ id)
+    return await ApiService.get(`/products/${id}`)
   }
 
   const addToCart = (id: number) => {

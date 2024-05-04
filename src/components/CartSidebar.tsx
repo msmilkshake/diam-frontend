@@ -17,7 +17,7 @@ const CartSidebar = ({ visible, setVisible }) => {
   const [product, setProduct] = useState<ProductProps>();
 
   const getProduct = async (id?: number) => {
-    return await ApiService.get("/products?id=" + id);
+    return await ApiService.get(`/products/${id}`);
   };
 
   return (
@@ -55,7 +55,7 @@ const CartItem = ({ id, qty, price }) => {
 
   const getProduct = async (id?: number) => {
     // console.log(id)
-    return await ApiService.get("/products?id=" + id);
+    return await ApiService.get(`/products/${id}`);
   };
 
   useEffect(() => {
