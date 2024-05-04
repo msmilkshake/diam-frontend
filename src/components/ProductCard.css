@@ -60,10 +60,7 @@
     font-style: italic;
 }
 
-.star {
-    font-size: 1.3rem;
-}
-
 .rating {
     color: khaki;
+    font-size: 0.85rem;
 }

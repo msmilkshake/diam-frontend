@@ -1,5 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useReducer, useState} from "react";
 import { Badge } from "primereact/badge";
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
@@ -8,6 +8,7 @@ import "primeflex/primeflex.css";
 import { InputText } from "primereact/inputtext";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {LoginContext, LoginDispatchContext} from "../contexts/LoginContext.ts";
 
 const UserButtons = () => {
   const [cartItems, setCartItems] = useState(0);
@@ -20,6 +21,9 @@ const UserButtons = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const userDispatch = useContext(LoginDispatchContext)
+  const user = useContext(LoginContext)
+
   useEffect(() => {
     const sessionCookie = Cookies.get("session");
     console.log("session cookie:", sessionCookie);
@@ -29,12 +33,17 @@ const UserButtons = () => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("User after login:", user)
+  }, [user]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await axios.get("http://localhost:8000/api/login");
-      const postResponse = await axios.post(
+      console.log("User before login:", user)
+      const response = await axios.post(
         "http://localhost:8000/api/login",
         {
           username,
@@ -48,10 +57,20 @@ const UserButtons = () => {
         },
       );
 
-      if (postResponse.status === 200) {
-        setIsLoggedIn(true);
+      if (response.status === 200) {
+        console.log("Response true!", response)
+        userDispatch!({
+          type: "login",
+          user: {
+            id: response.data.userid,
+            username: response.data.username,
+          }
+        })
+        setUsername("");
+        setPassword("");
+        setIsLoggedIn(true)
       } else {
-        // Handle login failure here.
+        console.log("Login failed! response:", response)
       }
     } catch (err) {
       // Handle request errors here.
@@ -139,11 +158,11 @@ const UserButtons = () => {
   );
 
   const handleLogout = () => {
-    Cookies.remove("session");
-    Cookies.remove("csrftoken");
+    userDispatch!({
+      type: "logout",
+      user: null,
+    })
     setIsLoggedIn(false);
-    setUsername("");
-    setPassword("");
   };
 
   return (
@@ -201,7 +220,7 @@ const UserButtons = () => {
           resizable={false}
           modal={false}
         >
-          <h2>Welcome {username}!</h2>
+          <h2>Welcome {user?.username}!</h2>
           <Button onClick={handleLogout}>Logout</Button>
         </Dialog>
       )}

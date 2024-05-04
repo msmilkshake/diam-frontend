@@ -7,9 +7,6 @@ import { Dropdown } from "primereact/dropdown";
 
 import "./ProductList.css";
 import { Paginator } from "primereact/paginator";
-import { Slider } from "primereact/slider";
-import { Checkbox } from "primereact/checkbox";
-import { Button } from "primereact/button";
 import ProductFilter from "./ProductFilter.tsx";
 
 const sortOptions = [

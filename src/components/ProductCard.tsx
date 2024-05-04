@@ -89,15 +89,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-row align-items-center gap-2 rating">
+            <div className="flex flex-row align-items-center gap-3 rating">
               {product.rating && (
                 <>
                   Rating:
-                  <span className="flex flex-row gap-1 star">{getStars()}</span>
+                  <span>{getStars()}</span>
                   {product.rating} / 5
                 </>
               )}
-              {!product.rating && <span className="star">No ratings yet.</span>}
+              {!product.rating && <span>No ratings yet.</span>}
             </div>
           </div>
         </Card>

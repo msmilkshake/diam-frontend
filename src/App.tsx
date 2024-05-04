@@ -16,32 +16,49 @@ import {
   CartDispatchContext,
   cartReducer,
 } from "./contexts/CartContext.ts";
+import {
+  LoginContext,
+  LoginDispatchContext,
+  loginReducer,
+} from "./contexts/LoginContext.ts";
+import CartSidebar from "./components/CartSidebar.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
 
-  const [visible, setVisible] = useState<boolean>(false);
+  const [appSidebarVisible, setAppSidebarVisible] = useState<boolean>(false);
+  const [cartSidebarVisible, setCartSidebarVisible] = useState<boolean>(false);
+
   const [cartItems, cartDispatch] = useReducer(cartReducer, []);
+  const [user, userDispatch] = useReducer(loginReducer, null);
 
   return (
     <BrowserRouter>
       <CartContext.Provider value={cartItems}>
         <CartDispatchContext.Provider value={cartDispatch}>
-          <div className="App">
-            <AppNavbar setVisible={setVisible}></AppNavbar>
-            <AppSidebar visible={visible} setVisible={setVisible}></AppSidebar>
-            <div className="flex flex-row justify-content-center">
-              <MainContent>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/products" element={<ProductList />} />
-                </Routes>
-              </MainContent>
-            </div>
-            <AppFooter></AppFooter>
-          </div>
+          <LoginContext.Provider value={user}>
+            <LoginDispatchContext.Provider value={userDispatch}>
+              <div className="App">
+                <AppNavbar setVisible={setAppSidebarVisible}></AppNavbar>
+                <AppSidebar
+                  visible={appSidebarVisible}
+                  setVisible={setAppSidebarVisible}
+                ></AppSidebar>
+                <CartSidebar visible={c}></CartSidebar>
+                <div className="flex flex-row justify-content-center">
+                  <MainContent>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/about" element={<AboutPage />} />
+                      <Route path="/contact" element={<ContactPage />} />
+                      <Route path="/products" element={<ProductList />} />
+                    </Routes>
+                  </MainContent>
+                </div>
+                <AppFooter></AppFooter>
+              </div>
+            </LoginDispatchContext.Provider>
+          </LoginContext.Provider>
         </CartDispatchContext.Provider>
       </CartContext.Provider>
     </BrowserRouter>
