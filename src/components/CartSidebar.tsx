@@ -21,13 +21,17 @@ const CartSidebar = ({ visible, setVisible }) => {
   const handlePurchase = async () => {
     //TODO
     if (user) {
-      const response = await axios.post("http://localhost:8000/api/orders",{}, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": Cookies.get("csrftoken"),
+      const response = await axios.post(
+        "http://localhost:8000/api/orders",
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get("csrftoken"),
+          },
         },
-      },)
-      console.log('Encomenda realizada:', response.data);
+      );
+      console.log("Encomenda realizada:", response.data);
     }
     // handleClear();
   };
@@ -52,7 +56,7 @@ const CartSidebar = ({ visible, setVisible }) => {
               <CartItem
                 key={item.id}
                 id={item.id}
-                qty={item.amount}
+                qty={item.quantity}
                 price={item.price}
               ></CartItem>
             ))}
@@ -72,6 +76,7 @@ export default CartSidebar;
 const CartItem = ({ id, qty, price }) => {
   const cartDispatch = useContext(CartDispatchContext);
   const [product, setProduct] = useState<ProductProps>();
+  const user = useContext(LoginContext);
 
   const getProduct = async (id?: number) => {
     // console.log(id)
@@ -100,7 +105,7 @@ const CartItem = ({ id, qty, price }) => {
         type: "update",
         payload: {
           id,
-          amount: qty + factor,
+          quantity: qty + factor,
           price: (qty + factor) * product.price,
         },
       });
@@ -108,16 +113,31 @@ const CartItem = ({ id, qty, price }) => {
   };
 
   // const handleSubtract = () => {
-  //     cartDispatch!({ type: "update", payload: {id, amount: qty - 1, price: (qty - 1) * price} });
+  //     cartDispatch!({ type: "update", payload: {id, quantity: qty - 1, price: (qty - 1) * price} });
   // };
   // const handleIncrease = () => {
-  //     cartDispatch!({ type: "update", payload: {id, amount: qty + 1, price: (qty + 1) * price} });
+  //     cartDispatch!({ type: "update", payload: {id, quantity: qty + 1, price: (qty + 1) * price} });
   // };
-  const handleDelete = () => {
-    cartDispatch!({
-      type: "remove",
-      payload: { id, amount: qty, price: price },
-    });
+  const handleDelete = async () => {
+    if (user) {
+      const response = await axios.put(
+        "http://localhost:8000/api/cart",
+        { product_id: id, quantity: 0 },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get("csrftoken"),
+          },
+        },
+      );
+      console.log("Item eliminado do carrinho:", response.data);
+    }
+    else {
+      cartDispatch!({
+        type: "remove",
+        payload: {id, quantity: qty, price: price},
+      });
+    }
   };
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(Boolean);

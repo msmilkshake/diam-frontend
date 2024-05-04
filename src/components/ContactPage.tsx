@@ -43,7 +43,7 @@ const ContactPage = () => {
     else{
       getProduct(id).then((product: ProductProps) => {
         setProduct(product)
-        cartDispatch!({type: "add", payload: {id, amount: qty, price: product!.price}});
+        cartDispatch!({type: "add", payload: {id, quantity: qty, price: product!.price}});
         console.log(id, product!.price)
       })
     }

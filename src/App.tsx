@@ -56,15 +56,12 @@ function App() {
     getDbCart()
   }, [user]);
   const getDbCart = async () => {
-    let cartjson = await ApiService.get("/cart");
-    console.log("JSON",cartjson)
-    const cart = (JSON.parse(cartjson) ||
+    const cart = (await ApiService.get("/cart") ||
         []) as CartItem[];
     cartDispatch({
       type: "restore",
       payload: cart,
     });
-
   }
 
 
