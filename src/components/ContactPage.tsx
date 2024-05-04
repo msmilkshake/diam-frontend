@@ -3,15 +3,29 @@ import "primeflex/primeflex.css";
 import { InputNumber } from "primereact/inputnumber";
 import {useContext, useEffect, useState} from "react";
 import { CartContext, CartDispatchContext } from "../contexts/CartContext.ts";
+import ApiService from "../services/ApiService.ts";
+import {ProductProps} from "./ProductCard.tsx";
+
 
 const ContactPage = () => {
   const [qty, setQty] = useState(0);
+  const [price, setPrice] = useState(0)
 
   const cart = useContext(CartContext);
   const cartDispatch = useContext(CartDispatchContext);
 
+  const [product, setProduct] = useState<ProductProps>();
+
+  const getProduct = async (id?: number) => {
+    return await ApiService.get("/products?id="+ id)
+  }
+
   const addToCart = (id: number) => {
-    cartDispatch!({ type: "add", payload: { id, amount: qty } });
+    getProduct(id).then((product: ProductProps) => {
+      setProduct(product)
+      cartDispatch!({ type: "add", payload: { id, amount: qty, price: product!.price}});
+      console.log(id, product!.price)
+    })
   };
 
   useEffect(() => {
@@ -24,6 +38,8 @@ const ContactPage = () => {
         <div>
           {"ID 1: "}
           <InputNumber onChange={(e) => setQty(e.value!)}></InputNumber>
+          {/*{"Price"}*/}
+          {/*<InputNumber onChange={(e) => setPrice(e.value!)}></InputNumber>*/}
           <Button onClick={() => addToCart(1)}>+</Button>
         </div>
         <div>

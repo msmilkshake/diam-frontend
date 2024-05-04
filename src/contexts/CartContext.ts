@@ -3,6 +3,7 @@ import { createContext, Dispatch } from "react";
 export type CartItem = {
   id: number;
   amount: number;
+  price: number;
 };
 
 export type CartAction = {
@@ -29,7 +30,7 @@ export const cartReducer = (cartItems: CartItem[], action: CartAction): CartItem
     case "update":
       results = cartItems.map((item) =>
         item.id === (action.payload as CartItem).id
-          ? { ...item, amount: (action.payload as CartItem).amount }
+          ? { ...item, amount: (action.payload as CartItem).amount, price: (action.payload as CartItem).price }
           : item,
       );
       break;
