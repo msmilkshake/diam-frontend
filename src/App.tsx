@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useReducer, useState } from "react";
+import React, {useContext, useEffect, useReducer, useState} from "react";
 import "primeflex/primeflex.css";
 import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
@@ -13,7 +13,7 @@ import axios from "axios";
 import ProductList from "./components/ProductList.tsx";
 import {
   CartContext,
-  CartDispatchContext,
+  CartDispatchContext, CartItem,
   cartReducer,
 } from "./contexts/CartContext.ts";
 import {
@@ -32,7 +32,15 @@ function App() {
 
   const [cartItems, cartDispatch] = useReducer(cartReducer, []);
   const [user, userDispatch] = useReducer(loginReducer, null);
+  // const cartDispatch = useContext(CartDispatchContext)
 
+  useEffect(() => {
+    const localCart = (JSON.parse(localStorage.getItem("anonymous-cart")) || []) as CartItem[]
+    cartDispatch({
+      type:"restore",
+      payload: localCart
+    })
+  }, []);
 
   return (
     <BrowserRouter>
@@ -41,12 +49,12 @@ function App() {
           <LoginContext.Provider value={user}>
             <LoginDispatchContext.Provider value={userDispatch}>
               <div className="App">
-                <AppNavbar setVisible={setAppSidebarVisible}></AppNavbar>
+                <AppNavbar setCartSidebarVisible={setCartSidebarVisible} setVisible={setAppSidebarVisible}></AppNavbar>
                 <AppSidebar
                   visible={appSidebarVisible}
                   setVisible={setAppSidebarVisible}
                 ></AppSidebar>
-                <CartSidebar visible={false}></CartSidebar>
+                <CartSidebar visible={cartSidebarVisible} setVisible={setCartSidebarVisible}></CartSidebar>
                 <div className="flex flex-row justify-content-center">
                   <MainContent>
                     <Routes>

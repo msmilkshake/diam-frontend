@@ -3,6 +3,7 @@ import { createContext, Dispatch } from "react";
 export type CartItem = {
   id: number;
   amount: number;
+  price: number;
 };
 
 export type CartAction = {
@@ -15,33 +16,40 @@ export const CartDispatchContext = createContext<Dispatch<CartAction> | null>(
   null,
 );
 
-export const cartReducer = (cartItems: CartItem[], action: CartAction) => {
+export const cartReducer = (cartItems: CartItem[], action: CartAction): CartItem[] => {
   const filteredCartItems = cartItems.filter(
     (item) => item.id !== (action.payload as CartItem).id,
   );
+  let results: CartItem[];
   switch (action.type) {
-    case "add": {
-      return [...filteredCartItems, action.payload];
-    }
+    case "add":
+      results = [...filteredCartItems, action.payload as CartItem];
+      break;
 
-    case "update": {
-      return cartItems.map((item) =>
+
+    case "update":
+      results = cartItems.map((item) =>
         item.id === (action.payload as CartItem).id
-          ? { ...item, amount: (action.payload as CartItem).amount }
+          ? { ...item, amount: (action.payload as CartItem).amount, price: (action.payload as CartItem).price }
           : item,
       );
-    }
+      break;
 
     case "remove":
-      return filteredCartItems;
+      results = filteredCartItems;
+      break;
 
     case "clear":
-      return [];
+      results = [];
+      break;
 
     case "restore":
-      return action.payload as CartItem[];
+      results = action.payload as CartItem[];
+      break;
 
     default:
       return cartItems;
   }
+  localStorage.setItem("anonymous-cart", JSON.stringify(results))
+  return results
 };

@@ -10,7 +10,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {LoginContext, LoginDispatchContext} from "../contexts/LoginContext.ts";
 
-const UserButtons = () => {
+const UserButtons = ({setCartSidebarVisible}) => {
   const [cartItems, setCartItems] = useState(0);
   const [visible, setVisible] = useState(false);
   const [dialogPos, setDialogPos] = useState({ top: "0", left: "0" });
@@ -121,7 +121,9 @@ const UserButtons = () => {
     });
     setLoginVisible(true);
   };
-
+  const toggleCartSidebar = () => {
+    setCartSidebarVisible(true);
+  }
   const items = [
     {
       label: itemRenderer("bi-plus"),
@@ -137,6 +139,9 @@ const UserButtons = () => {
     },
     {
       label: cartRenderer("bi-cart"),
+      command: () => {
+        toggleCartSidebar();
+      },
     },
   ];
 
