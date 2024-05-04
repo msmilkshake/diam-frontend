@@ -10,16 +10,17 @@ import { Paginator } from "primereact/paginator";
 import { Slider } from "primereact/slider";
 import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
+import ProductFilter from "./ProductFilter.tsx";
 
-const sortOptions =  [
-      "Name (Ascending)",
-      "Name (Descending)",
-      "Price (Ascending)",
-      "Price (Descending)",
-      "No sorting",
-    ];
+const sortOptions = [
+  "Name (Ascending)",
+  "Name (Descending)",
+  "Price (Ascending)",
+  "Price (Descending)",
+  "No sorting",
+];
 
-const cardsPerPage =  9;
+const cardsPerPage = 9;
 
 const ProductList = () => {
   const [searchParams] = useSearchParams();
@@ -28,11 +29,12 @@ const ProductList = () => {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [sortedProducts, setSortedProducts] = useState<ProductProps[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
-  const [sortBy, setSortBy] = useState("No sorting");
+  const [sortBy, setSortBy] = useState(sortOptions[4]);
   const [pageFirst, setPageFirst] = useState(0);
   const [priceSliderValue, setPriceSliderValue] = useState([0, 0]);
   const [productMinMax, setproductMinMax] = useState([0, 0]);
   const [inStockFilter, setInStockFilter] = useState(false);
+  const [inSaleFilter, setInSaleFilter] = useState(false);
 
   const getProducts = async (type?: string) => {
     let url = "/products";
@@ -43,6 +45,7 @@ const ProductList = () => {
   };
 
   useEffect(() => {
+    setSortBy(sortOptions[4]);
     console.log("effect");
     getProducts(type)
       .then((prodArray: ProductProps[]) => {
@@ -63,41 +66,47 @@ const ProductList = () => {
 
     setproductMinMax([minPrice, maxPrice]);
     setPriceSliderValue([minPrice, maxPrice]);
+    handleSortChange(sortOptions[4]);
   }, [products]);
 
-  const handleSortChange = (sort: string) => {
-    setSortBy(sort);
+  const handleSortChange = (sort) => {
     console.log(sort);
     let sortedProducts: ProductProps[] = [];
     if (sort === sortOptions[0]) {
-      sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name));
+      sortedProducts = [...products].sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
     }
     if (sort === sortOptions[1]) {
-      sortedProducts = [...products].sort((a, b) => b.name.localeCompare(a.name));
+      sortedProducts = [...products].sort((a, b) =>
+        b.name.localeCompare(a.name),
+      );
     }
     if (sort === sortOptions[2]) {
       sortedProducts = [...products].sort((a, b) => {
-        const aPrice: number = a.discountPrice || a.price
-        const bPrice: number = b.discountPrice || b.price
+        const aPrice: number = a.discountPrice || a.price;
+        const bPrice: number = b.discountPrice || b.price;
         return aPrice - bPrice;
       });
     }
     if (sort === sortOptions[3]) {
       sortedProducts = [...products].sort((a, b) => {
-        const aPrice: number = a.discountPrice || a.price
-        const bPrice: number = b.discountPrice || b.price
+        const aPrice: number = a.discountPrice || a.price;
+        const bPrice: number = b.discountPrice || b.price;
         return bPrice - aPrice;
       });
     }
     if (sort === sortOptions[4]) {
-      sortedProducts = [...products]
+      sortedProducts = [...products];
     }
+    console.log("Applying sorted products:", sortedProducts);
     setSortedProducts(sortedProducts);
     setPageFirst(0);
   };
 
   useEffect(() => {
-    applyFilters()
+    console.log("Applying filters", filteredProducts);
+    applyFilters();
   }, [sortedProducts]);
 
   const pageProducts = useMemo(
@@ -119,11 +128,14 @@ const ProductList = () => {
   };
 
   const applyFilters = () => {
-    console.log("Stock filter:",inStockFilter)
-    console.log("Price Min:",priceSliderValue[0])
-    console.log("Price Max:",priceSliderValue[1])
+    console.log("Stock filter:", inStockFilter);
+    console.log("Price Min:", priceSliderValue[0]);
+    console.log("Price Max:", priceSliderValue[1]);
     const filteredProducts = sortedProducts.filter((product) => {
       if (inStockFilter && !product.inStock) {
+        return false;
+      }
+      if (inSaleFilter && !product.discountPrice) {
         return false;
       }
 
@@ -132,13 +144,13 @@ const ProductList = () => {
     });
 
     setFilteredProducts(filteredProducts);
-  }
+  };
 
   const resetFilters = () => {
     setInStockFilter(false);
     setPriceSliderValue([productMinMax[0], productMinMax[1]]);
-    setFilteredProducts(sortedProducts)
-  }
+    setFilteredProducts(sortedProducts);
+  };
 
   return (
     <>
@@ -151,33 +163,17 @@ const ProductList = () => {
       <div className="grid">
         <div className="col-3">
           <Card className="ml-4 sticky testclass">
-            <div className="flex flex-column gap-6">
-              <h4>Product Filters</h4>
-              <div className="flex flex-column gap-4 align-items-center">
-                <div className="flex flex-row justify-content-between w-full">
-                  <span>Min: {priceSliderValue[0].toFixed(2)} €</span>
-                  <span>Max: {priceSliderValue[1].toFixed(2)} €</span>
-                </div>
-                <Slider
-                  style={{ width: "80%" }}
-                  value={priceSliderValue}
-                  min={productMinMax[0]}
-                  max={productMinMax[1]}
-                  step={1}
-                  onChange={(e) => onSliderChange(e.value)}
-                  // className="w-14rem"
-                  range
-                />
-              </div>
-              <div className="flex flex-row align-items-center justify-content-start gap-3 ml-4">
-                <Checkbox checked={inStockFilter} onChange={() => setInStockFilter(!inStockFilter)} inputId="stock-filter"></Checkbox>
-                <label htmlFor="stock-filter">In stock</label>
-              </div>
-              <div className="flex flex-row justify-content-center gap-3 mb-4">
-                <Button onClick={applyFilters}>Apply filters</Button>
-                <Button onClick={resetFilters} outlined >Reset filters</Button>
-              </div>
-            </div>
+            <ProductFilter
+              priceSliderValue={priceSliderValue}
+              productMinMax={productMinMax}
+              onSliderChange={(e) => onSliderChange(e.value)}
+              inStockFilter={inStockFilter}
+              inSaleFilter={inSaleFilter}
+              onStockCheck={() => setInStockFilter(!inStockFilter)}
+              onSaleCheck={() => setInSaleFilter(!inSaleFilter)}
+              onApplyFilterClick={applyFilters}
+              onResetFilterClick={resetFilters}
+            />
           </Card>
         </div>
         <div className="col-9">
@@ -186,7 +182,10 @@ const ProductList = () => {
             <Dropdown
               options={sortOptions}
               value={sortBy}
-              onChange={(e) => handleSortChange(e.value)}
+              onChange={(e) => {
+                setSortBy(e.value);
+                handleSortChange(e.value);
+              }}
             ></Dropdown>
           </div>
           <div className="grid m-2">

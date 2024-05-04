@@ -40,17 +40,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <>
       <div className="col-4 p-3">
         <Card>
-          <div className="flex flex-column align-items-center gap-3 card-content">
-            <img
-              className="card-image"
-              src={`${BASE_URL}/${product.imageUrl}`}
-              alt=""
-            />
+          <div className="flex flex-column align-items-center gap-2 card-content">
+            <div className="relative">
+              {product.discountPercent &&
+                <div className="absolute float-discount p-3">
+                  {product.discountPercent} %
+                </div>
+              }
+              <img
+                className="card-image"
+                src={`${BASE_URL}/${product.imageUrl}`}
+                alt=""
+              />
+            </div>
             <span className="product-name">{product.name}</span>
             <span className="overflow-description text-justify">
               {product.description}
             </span>
-            <div className="flex flex-row justify-content-between align-items-end w-full mt-4">
+            <div className="flex flex-row justify-content-between align-items-end w-full">
               <div>
                 {product.inStock && (
                   <span className="in-stock">
@@ -65,11 +72,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   </span>
                 )}
               </div>
-              <div>
+              <div className="flex flex-column justify-content-end align-items-end price-continer">
+                {product.discountPrice && (
+                  <span>
+                    <s>{product.price.toFixed(2)} €</s>
+                  </span>
+                )}
                 <span className="price">
                   Price:{" "}
                   <span className="price val">
-                    {product.discountPrice ? product.discountPrice.toFixed(2) : product.price.toFixed(2)} €
+                    {product.discountPrice
+                      ? product.discountPrice.toFixed(2)
+                      : product.price.toFixed(2)}{" "}
+                    €
                   </span>
                 </span>
               </div>
@@ -82,9 +97,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   {product.rating} / 5
                 </>
               )}
-              {!product.rating && (
-                <span className="star">No ratings yet.</span>
-              )}
+              {!product.rating && <span className="star">No ratings yet.</span>}
             </div>
           </div>
         </Card>

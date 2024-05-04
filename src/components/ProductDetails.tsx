@@ -1,0 +1,9 @@
+
+
+const productDetails = () => {
+
+    return (
+        <>
+        </>
+    )
+}
