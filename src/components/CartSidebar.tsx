@@ -97,15 +97,15 @@ const CartItem = ({ id, qty, price }) => {
     <>
       <Card>
         <div className="flex flex-column gap-2">
-          <span>id: {id}</span>
-          <span>nome: {product?.name}</span>
-          <span>amount: {qty}</span>
-          <span>price: {price}</span>
+          {/*<span>id: {id}</span>*/}
+          <span>{product?.name}</span>
+          <span>{price}€</span>
           <div className="flex flex-row gap-2">
             <Button onClick={() => handleUpdate(-1)}>-</Button>
+            <span style={{ fontSize: "20px", alignItems: "center", display: "flex", justifyContent: "center"}} >{qty}</span>
             <Button onClick={() => handleUpdate(+1)}>+</Button>
             <div className="ml-8">
-            <Button onClick={handleDelete}>Delete</Button>
+              <Button onClick={handleDelete}>Delete</Button>
             </div>
           </div>
         </div>
