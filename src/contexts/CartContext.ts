@@ -26,7 +26,6 @@ export const cartReducer = (cartItems: CartItem[], action: CartAction): CartItem
       results = [...filteredCartItems, action.payload as CartItem];
       break;
 
-
     case "update":
       results = cartItems.map((item) =>
         item.id === (action.payload as CartItem).id

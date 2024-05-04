@@ -13,6 +13,10 @@ const CartSidebar = ({ visible, setVisible }) => {
   const handleClear = () => {
     cartDispatch!({ type: "clear", payload: [] });
   };
+  const handlePurchase = () => {
+    //TODO
+    handleClear();
+  };
 
   const [product, setProduct] = useState<ProductProps>();
 
@@ -39,8 +43,9 @@ const CartSidebar = ({ visible, setVisible }) => {
             ))}
           {cartItems?.length === 0 && <span>empty cart</span>}
         </div>
-        <div>
+        <div className="flex flex-row gap-8 mt-5">
           <Button onClick={handleClear}>Clear</Button>
+          <Button onClick={handlePurchase}>Finalizar</Button>
         </div>
       </Sidebar>
     </>
@@ -93,9 +98,10 @@ const CartItem = ({ id, qty, price }) => {
     cartDispatch!({ type: "remove", payload: {id, amount: qty, price: price} });
   };
 
+
   return (
     <>
-      <Card>
+      <Card className="mt-2">
         <div className="flex flex-column gap-2">
           {/*<span>id: {id}</span>*/}
           <span>{product?.name}</span>
