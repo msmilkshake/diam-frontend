@@ -3,7 +3,7 @@ import React, { useReducer, useState } from "react";
 import "primeflex/primeflex.css";
 import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes, useParams} from "react-router-dom";
 import HomePage from "./components/HomePage.tsx";
 import AboutPage from "./components/AboutPage.tsx";
 import ContactPage from "./components/ContactPage.tsx";
@@ -22,6 +22,7 @@ import {
   loginReducer,
 } from "./contexts/LoginContext.ts";
 import CartSidebar from "./components/CartSidebar.tsx";
+import ProductDetails from "./components/ProductDetails.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -31,6 +32,7 @@ function App() {
 
   const [cartItems, cartDispatch] = useReducer(cartReducer, []);
   const [user, userDispatch] = useReducer(loginReducer, null);
+
 
   return (
     <BrowserRouter>
@@ -44,7 +46,7 @@ function App() {
                   visible={appSidebarVisible}
                   setVisible={setAppSidebarVisible}
                 ></AppSidebar>
-                <CartSidebar visible={c}></CartSidebar>
+                <CartSidebar visible={false}></CartSidebar>
                 <div className="flex flex-row justify-content-center">
                   <MainContent>
                     <Routes>
@@ -52,6 +54,7 @@ function App() {
                       <Route path="/about" element={<AboutPage />} />
                       <Route path="/contact" element={<ContactPage />} />
                       <Route path="/products" element={<ProductList />} />
+                      <Route path="/products/:id" element={<ProductDetails />} />
                     </Routes>
                   </MainContent>
                 </div>

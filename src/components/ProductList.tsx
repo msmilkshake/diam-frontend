@@ -33,6 +33,7 @@ const ProductList = () => {
   const [inStockFilter, setInStockFilter] = useState(false);
   const [inSaleFilter, setInSaleFilter] = useState(false);
 
+
   const getProducts = async (type?: string) => {
     let url = "/products";
     if (type) {

@@ -59,10 +59,10 @@ const ProductFilter = ({
               ></Checkbox>
               <label htmlFor="sale-filter">On sale only</label>
           </div>
-          <div className="flex flex-row justify-content-center gap-3 mb-4 mb-4">
-              <Button onClick={onApplyFilterClick}>Apply filters</Button>
+          <div className="flex flex-row justify-content-center gap-3 my-4">
+              <Button onClick={onApplyFilterClick}>Apply</Button>
               <Button onClick={onResetFilterClick} outlined>
-                  Reset filters
+                  Reset
               </Button>
           </div>
       </div>
