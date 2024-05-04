@@ -23,6 +23,7 @@ import {
 } from "./contexts/LoginContext.ts";
 import CartSidebar from "./components/CartSidebar.tsx";
 import ProductDetails from "./components/ProductDetails.tsx";
+import SignupPage from "./components/Signup.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -59,7 +60,7 @@ function App() {
                   <MainContent>
                     <Routes>
                       <Route path="/" element={<HomePage />} />
-                      <Route path="/about" element={<AboutPage />} />
+                      <Route path="/about" element={<SignupPage />} />
                       <Route path="/contact" element={<ContactPage />} />
                       <Route path="/products" element={<ProductList />} />
                       <Route path="/products/:id" element={<ProductDetails />} />
