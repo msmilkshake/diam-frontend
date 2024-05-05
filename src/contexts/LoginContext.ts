@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 
 export type User = {
   id: number;
+  is_superuser: boolean;
+  is_staff: boolean;
   username: string;
 };
 
