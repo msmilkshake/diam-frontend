@@ -4,27 +4,48 @@ import {useContext, useEffect, useState} from "react";
 import { CartContext, CartDispatchContext } from "../contexts/CartContext.ts";
 import ApiService from "../services/ApiService.ts";
 import {ProductProps} from "./ProductCard.tsx";
+import {LoginContext} from "../contexts/LoginContext.ts";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 
 const ContactPage = () => {
   const [qty, setQty] = useState(0);
-  const [price, setPrice] = useState(0)
 
   const cart = useContext(CartContext);
   const cartDispatch = useContext(CartDispatchContext);
 
   const [product, setProduct] = useState<ProductProps>();
+  const user = useContext(LoginContext);
 
   const getProduct = async (id?: number) => {
     return await ApiService.get(`/products/${id}`)
   }
 
-  const addToCart = (id: number) => {
-    getProduct(id).then((product: ProductProps) => {
-      setProduct(product)
-      cartDispatch!({ type: "add", payload: { id, amount: qty, price: product!.price}});
-      console.log(id, product!.price)
-    })
+  const addToCart = async (id: number) => {
+    if (user) {
+      const response = await axios.post(
+          "http://localhost:8000/api/cart",
+          {
+            product_id: id,
+            quantity: qty,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": Cookies.get("csrftoken"),
+            },
+          },
+      );
+      console.log('Adicionado item ao carrinho:', response.data);
+    }
+    else{
+      getProduct(id).then((product: ProductProps) => {
+        setProduct(product)
+        cartDispatch!({type: "add", payload: {id, quantity: qty, price: product!.price}});
+        console.log(id, product!.price)
+      })
+    }
   };
 
   useEffect(() => {
