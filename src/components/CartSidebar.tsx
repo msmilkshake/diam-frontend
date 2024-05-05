@@ -2,7 +2,7 @@ import { Sidebar } from "primereact/sidebar";
 import { useContext, useEffect, useReducer, useState } from "react";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
-import { CartContext, CartDispatchContext } from "../contexts/CartContext.ts";
+import {CartContext, CartDispatchContext, CartItem} from "../contexts/CartContext.ts";
 import { ProductProps } from "./ProductCard.tsx";
 import ApiService from "../services/ApiService.ts";
 import { LoginContext, loginReducer } from "../contexts/LoginContext.ts";
@@ -52,12 +52,12 @@ const CartSidebar = ({ visible, setVisible }) => {
         <div>
           {cartItems!.length > 0 &&
             cartItems!.map((item) => (
-              <CartItem
+              <CartItemFunc
                 key={item.id}
                 id={item.id}
                 qty={item.quantity}
                 price={item.price}
-              ></CartItem>
+              ></CartItemFunc>
             ))}
           {cartItems?.length === 0 && <span>empty cart</span>}
         </div>
@@ -72,7 +72,7 @@ const CartSidebar = ({ visible, setVisible }) => {
 
 export default CartSidebar;
 
-const CartItem = ({ id, qty, price }) => {
+const CartItemFunc = ({ id, qty, price }) => {
   const cartDispatch = useContext(CartDispatchContext);
   const [product, setProduct] = useState<ProductProps>();
   const user = useContext(LoginContext);
@@ -111,12 +111,17 @@ const CartItem = ({ id, qty, price }) => {
     });
   };
 
-  // const handleSubtract = () => {
-  //     cartDispatch!({ type: "update", payload: {id, quantity: qty - 1, price: (qty - 1) * price} });
-  // };
-  // const handleIncrease = () => {
-  //     cartDispatch!({ type: "update", payload: {id, quantity: qty + 1, price: (qty + 1) * price} });
-  // };
+  const getDbCart = async () => {
+    const cart = (await ApiService.get("/cart") ||
+        []) as CartItem[];
+    cartDispatch({
+      type: "restore",
+      payload: cart,
+    });
+    console.log(cart)
+  }
+
+
   const handleDelete = async () => {
     if (user) {
       const response = await axios.put(
@@ -136,6 +141,7 @@ const CartItem = ({ id, qty, price }) => {
         type: "remove",
         payload: {id, quantity: qty, price: price},
       });
+      getDbCart();
     }
   };
 

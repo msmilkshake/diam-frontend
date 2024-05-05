@@ -55,6 +55,8 @@ function App() {
   useEffect(() => {
     getDbCart()
   }, [user]);
+
+
   const getDbCart = async () => {
     const cart = (await ApiService.get("/cart") ||
         []) as CartItem[];
