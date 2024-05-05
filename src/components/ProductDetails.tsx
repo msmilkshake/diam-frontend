@@ -18,29 +18,19 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import {CartDispatchContext, CartItem} from "../contexts/CartContext.ts";
 
+type Review = {
+  review: string;
+  rating: number;
+  bought: boolean;
+};
+
 const ProductDetails = () => {
   const cartDispatch = useContext(CartDispatchContext);
   const user = useContext(LoginContext);
   const { id } = useParams();
   const [product, setProduct] = useState<ProductProps | null>(null);
   const [cartQty, setCartQty] = useState<number>(1);
-  const [reviews, setReviews] = useState([
-    {
-      review: "Lorem ipsum 1",
-      rating: 4,
-      bought: true,
-    },
-    {
-      review: "Lorem ipsum 2",
-      rating: 5,
-      bought: false,
-    },
-    {
-      review: "Lorem ipsum 3",
-      rating: 3,
-      bought: true,
-    },
-  ]);
+  const [reviews, setReviews] = useState([]);
   const [reviewComment, setReviewComment] = useState<string>("");
   const [reviewRating, setReviewRating] = useState<number>(0);
   const [reviewBought, setReviewBought] = useState<boolean>(false);
@@ -59,7 +49,37 @@ const ProductDetails = () => {
         console.log(product);
       })
       .catch((error) => console.error(error));
+    getReviews();
   }, []);
+
+  const getReviews = async () => {
+    const url = `/reviews?product_id=${id}`;
+    const response =  await ApiService.get(url) as Review[];
+    setReviews(response);
+    console.log("[ProductDetails]",response);
+  }
+
+  const submitReview = async (review: Review) => {
+    console.log("Creating review for product: ", product!.id);
+
+    const response = await axios.post(
+        "http://localhost:8000/api/reviews",
+        {
+          review: reviewComment,
+          rating: reviewRating,
+          product_id: product!.id,
+          bought: reviewBought,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get("csrftoken"),
+          },
+        },
+    );
+    getReviews()
+  }
+
 
   const getStars = (value: number) => {
     const intRating = Math.trunc(value);
@@ -150,12 +170,6 @@ const ProductDetails = () => {
     });
   };
 
-  const submitReview = () => {
-    console.log("Button clicked!");
-    console.log("Review comment:", reviewComment);
-    console.log("Review rating:", reviewRating);
-    console.log("Review bought:", reviewBought);
-  };
 
   const handleAddToCart = async () => {
     if (user){
