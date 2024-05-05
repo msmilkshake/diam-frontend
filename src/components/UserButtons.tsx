@@ -24,24 +24,19 @@ const UserButtons = ({setCartSidebarVisible}) => {
   const user = useContext(LoginContext)
 
   useEffect(() => {
-    const sessionCookie = Cookies.get("session");
-    console.log("session cookie:", sessionCookie);
-
+    const sessionCookie = localStorage.getItem("sessionid");
+    // console.log("session cookie:", sessionCookie);
     if (sessionCookie) {
       setIsLoggedIn(true);
     }
   }, []);
-
-  useEffect(() => {
-    console.log("User after login:", user)
-  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await axios.get("http://localhost:8000/api/login");
-      console.log("User before login:", user)
+      // console.log("User before login:", user)
       const response = await axios.post(
         "http://localhost:8000/api/login",
         {
@@ -65,14 +60,15 @@ const UserButtons = ({setCartSidebarVisible}) => {
             username: response.data.username,
           }
         })
+        localStorage.setItem('sessionid', response.data.session_key);
         setUsername("");
         setPassword("");
         setIsLoggedIn(true)
+        console.log("Logged in with username: ", response.data.username)
       } else {
         console.log("Login failed! response:", response)
       }
     } catch (err) {
-      // Handle request errors here.
       console.log(err);
     }
   };

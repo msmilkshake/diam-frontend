@@ -39,32 +39,30 @@ function App() {
   // const cartDispatch = useContext(CartDispatchContext)
 
   useEffect(() => {
-    if (!user) {
-      const localCart = (JSON.parse(localStorage.getItem("anonymous-cart")) ||
-          []) as CartItem[];
-      cartDispatch({
-        type: "restore",
-        payload: localCart,
-      });
-      return
-    }
-    else{
-      getDbCart()
-    }
+    axios.get('http://localhost:8000/api/check-session',{
+      params: {
+        sessionid: localStorage.getItem("sessionid"),
+      }
+    }).then(response => {
+      // console.log(response.data)
+      if (response.data.status === "valid"){
+        userDispatch!({
+          type: "login",
+          user: {
+            id: response.data.userid,
+            username: response.data.username,
+          }
+        })
+      }
+      else{
+        userDispatch!({
+          type: "logout",
+          user: null,
+        })
+      }
+    })
   }, []);
-  useEffect(() => {
-    getDbCart()
-  }, [user]);
 
-
-  const getDbCart = async () => {
-    const cart = (await ApiService.get("/cart") ||
-        []) as CartItem[];
-    cartDispatch({
-      type: "restore",
-      payload: cart,
-    });
-  }
 
 
   return (

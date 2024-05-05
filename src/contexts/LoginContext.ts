@@ -19,12 +19,12 @@ export const LoginDispatchContext = createContext<Dispatch<UserAction> | null>(
 export const loginReducer = (user: User | null, action: UserAction) => {
   switch (action.type) {
     case "login": {
-      console.log("in LOGIN action")
       return action.user;
     }
     case "logout":
       Cookies.remove("csrftoken");
       Cookies.remove("sessionid");
+      localStorage.removeItem('sessionid');
       return null;
     default:
       return user;

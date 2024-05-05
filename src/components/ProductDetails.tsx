@@ -14,8 +14,13 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Checkbox } from "primereact/checkbox";
 import { LoginContext } from "../contexts/LoginContext.ts";
+import Cookies from "js-cookie";
+import axios from "axios";
+import {CartDispatchContext, CartItem} from "../contexts/CartContext.ts";
 
 const ProductDetails = () => {
+  const cartDispatch = useContext(CartDispatchContext);
+  const user = useContext(LoginContext);
   const { id } = useParams();
   const [product, setProduct] = useState<ProductProps | null>(null);
   const [cartQty, setCartQty] = useState<number>(1);
@@ -79,10 +84,10 @@ const ProductDetails = () => {
     return getStars(product!.rating);
   };
 
-  const reviewItem = (review, rating, bought) => {
+  const reviewItem = (review, rating, bought, index) => {
     return (
       <>
-        <div className={`col-12 flex flex-column gap-2`}>
+        <div key={"reviewitem" + index} className={`col-12 flex flex-column gap-2`}>
           <div className="flex flex-row justify-content-start ml-5 gap-4">
             <div className={`${styles.rating}`}>
               {getStars(rating)} {rating}/5
@@ -118,15 +123,16 @@ const ProductDetails = () => {
 
   const listTemplate = () => {
     if (!reviews || reviews.length === 0) return null;
-
-    const list = reviews.map((review) =>
-      reviewItem(review.review, review.rating, review.bought),
-    );
-
+    let index = 0
+    const list = reviews.map((review) =>{
+        index++
+        return reviewItem(review.review, review.rating, review.bought, index)
+    });
+    index++
     return (
       <div>
         <Divider />
-        <div className="grid grid-nogutter">{list}</div>
+        <div key={index} className="grid grid-nogutter">{list}</div>
       </div>
     );
   };
@@ -134,7 +140,7 @@ const ProductDetails = () => {
   const starsInput = () => {
     return Array.from({ length: 5 }).map((_, index) => {
       return (
-        <i
+        <i key={index}
           className={
             index + 1 <= reviewRating ? `bi bi-star-fill` : `bi bi-star`
           }
@@ -150,6 +156,30 @@ const ProductDetails = () => {
     console.log("Review rating:", reviewRating);
     console.log("Review bought:", reviewBought);
   };
+
+  const handleAddToCart = async () => {
+    if (user){
+      const url = "http://localhost:8000/api/cart";
+      const data = {product_id: id, quantity: cartQty};
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get("csrftoken"),
+        },
+      };
+      const response = await axios.post(url, data, config)
+      const cart = (await ApiService.get("/cart") ||
+          []) as CartItem[];
+      cartDispatch!({
+        type: "restore",
+        payload: cart,
+      });
+      console.log("[ProductDetails] Item adicionado ao carrinho:", response)
+    }
+    else{
+        cartDispatch!({type: "add", payload: {id: parseInt(id!), quantity: cartQty, price: product!.price}});
+    }
+  }
 
   return (
     <>
@@ -254,7 +284,7 @@ const ProductDetails = () => {
                       />
                     </div>
                     <div>
-                      <Button className="p-button-secondary">
+                      <Button onClick={handleAddToCart} className="p-button-secondary">
                         <div className="flex flex-row gap-2">
                           <i className="bi bi-cart" />
                           Adicionar ao carrinho
@@ -291,7 +321,7 @@ const ProductDetails = () => {
                 <>
                   Avalia este produto:
                   <InputTextarea
-                    style={{ minWidth: "600px" }}
+                    style={{ minWidth: "600px", maxWidth:"600px", minHeight:"75px", maxHeight:"300px"}}
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
                   />

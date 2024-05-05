@@ -48,9 +48,9 @@ const ContactPage = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("---LOG--- Cart:", cart)
-  }, [cart]);
+  // useEffect(() => {
+  //   console.log("---LOG--- Cart:", cart)
+  // }, [cart]);
 
   return (
     <>
