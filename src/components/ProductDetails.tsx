@@ -2,7 +2,7 @@ import styles from "./ProductDetails.module.css";
 import "./ProductDetails.overrides.css";
 import { Card } from "primereact/card";
 import { useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ApiService, { BASE_URL } from "../services/ApiService.ts";
 import { ProductProps } from "./ProductCard.tsx";
 import { InputNumber } from "primereact/inputnumber";
@@ -13,6 +13,7 @@ import { Badge } from "primereact/badge";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Checkbox } from "primereact/checkbox";
+import { LoginContext } from "../contexts/LoginContext.ts";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -38,6 +39,8 @@ const ProductDetails = () => {
   const [reviewComment, setReviewComment] = useState<string>("");
   const [reviewRating, setReviewRating] = useState<number>(0);
   const [reviewBought, setReviewBought] = useState<boolean>(false);
+
+  const loginContext = useContext(LoginContext);
 
   const getProduct = async () => {
     const url = `/products/${id}`;
@@ -142,11 +145,11 @@ const ProductDetails = () => {
   };
 
   const submitReview = () => {
-    console.log("Button clicked!")
-    console.log("Review comment:", reviewComment)
-    console.log("Review rating:", reviewRating)
-    console.log("Review bought:", reviewBought)
-  }
+    console.log("Button clicked!");
+    console.log("Review comment:", reviewComment);
+    console.log("Review rating:", reviewRating);
+    console.log("Review bought:", reviewBought);
+  };
 
   return (
     <>
@@ -280,30 +283,38 @@ const ProductDetails = () => {
               <strong>Avaliações</strong>
             </p>
             <DataView value={reviews} listTemplate={listTemplate} />
-            <div className="flex flex-column align-items-start gap-2" style={{width: "600px"}}>
-              Avalia este produto:
-              <InputTextarea
-                  style={{ minWidth: "600px" }}
-                  value={reviewComment}
-                  onChange={(e) => setReviewComment(e.target.value)}
-              />
-              <div className="flex flex-row justify-content-between align-items-end w-full">
-                <div className="flex flex-column align-items-start gap-2">
-                  <div
-                      className={`${styles.rating} ${styles.overall} flex flex-row gap-1`}
-                  >
-                    {starsInput()}
+            <div
+              className="flex flex-column align-items-start gap-2"
+              style={{ width: "600px" }}
+            >
+              {loginContext && (
+                <>
+                  Avalia este produto:
+                  <InputTextarea
+                    style={{ minWidth: "600px" }}
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                  />
+                  <div className="flex flex-row justify-content-between align-items-end w-full">
+                    <div className="flex flex-column align-items-start gap-2">
+                      <div
+                        className={`${styles.rating} ${styles.overall} flex flex-row gap-1`}
+                      >
+                        {starsInput()}
+                      </div>
+                      <div className="flex flex-row gap-2">
+                        <Checkbox
+                          checked={reviewBought}
+                          onChange={() => setReviewBought(!reviewBought)}
+                        />
+                        Comprei este produto
+                      </div>
+                    </div>
+                    <Button onClick={submitReview}>Submeter</Button>
                   </div>
-                  <div className="flex flex-row gap-2">
-                    <Checkbox
-                        checked={reviewBought}
-                        onChange={() => setReviewBought(!reviewBought)}
-                    />
-                    Comprei este produto
-                  </div>
-                </div>
-                <Button onClick={submitReview}>Submeter</Button>
-              </div>
+                </>
+              )}
+              {!loginContext && "Faça login para avaliar este produto."}
             </div>
           </div>
         </Card>

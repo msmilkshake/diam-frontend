@@ -1,0 +1,8 @@
+
+.productCard .p-card .p-card-content {
+    padding: 0 !important;
+}
+
+.productCard *:hover .productName {
+    text-shadow: 0 0 10px rgba(0, 129, 140, 248), 0 0 10px rgba(0, 129, 140, 248), 0 0 10px rgba(0, 129, 140, 248), 0 0 10px rgba(0, 129, 140, 248);
+}

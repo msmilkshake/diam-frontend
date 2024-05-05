@@ -1,0 +1,34 @@
+.discount {
+    background: khaki;
+    color: black;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-style: italic;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 10px rgba(255, 127, 80, 0.75), 0 0 10px rgba(255, 127, 80, 0.75), 0 0 10px rgba(255, 127, 80, 0.75), 0 0 10px rgba(255, 127, 80, 0.75);
+}
+
+.rating {
+    color: khaki;
+}
+.rating.overall {
+    font-size: 1.2rem;
+}
+
+.inStock {
+    color: limegreen;
+}
+
+.outOfStock {
+    color: indianred;
+}
+
+.price.val {
+    color: coral;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.italic {
+    font-style: italic;
+}
