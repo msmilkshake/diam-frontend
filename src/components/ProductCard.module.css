@@ -1,9 +1,5 @@
 
-.p-card .p-card-content {
-    padding: 0 !important;
-}
-
-.overflow-description {
+.overflowDescription {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -12,7 +8,7 @@
     min-height: 3.75em;
 }
 
-.float-discount {
+.floatDiscount {
     background: khaki;
     color: black;
     font-size: 1.2rem;
@@ -23,7 +19,7 @@
     border-radius: 0.25rem;
 }
 
-.product-name {
+.productName {
     display: -webkit-box;
     font-size: 1.3rem;
     font-weight: bold;
@@ -33,20 +29,20 @@
     min-height: 2.42em;
 }
 
-.card-image {
+.cardImage {
     width: 100%;
     border-radius: 6px;
 }
 
-.in-stock {
+.inStock {
     color: limegreen;
 }
 
-.out-of-stock {
+.outOfStock {
     color: indianred;
 }
 
-.price-continer {
+.priceContainer {
     min-height: 3rem;
 }
 
@@ -58,6 +54,10 @@
     font-weight: bold;
     font-size: 1.4rem;
     font-style: italic;
+}
+
+.originalPrice {
+    text-decoration: line-through !important;
 }
 
 .rating {

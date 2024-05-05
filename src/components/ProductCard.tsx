@@ -1,9 +1,9 @@
 import { Card } from "primereact/card";
 import React from "react";
 import { BASE_URL } from "../services/ApiService.ts";
-import "./ProductCard.css";
-import "primeflex/primeflex.css";
-import { Link, useNavigate } from "react-router-dom";
+import styles from "./ProductCard.module.css";
+import "./ProductCard.override.css";
+import { Link } from "react-router-dom";
 
 export interface ProductProps {
   id: number;
@@ -22,8 +22,6 @@ export interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const navigate = useNavigate();
-
   const getStars = () => {
     const intRating = Math.trunc(product.rating);
     const starsArr = [];
@@ -39,52 +37,55 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     return starsArr;
   };
+
   return (
     <>
-      <div className="col-4 p-3">
+      <div className="productCard col-4 p-3">
         <Link to={`/products/${product.id}`}>
           <Card>
-            <div className="flex flex-column align-items-center gap-2 card-content">
+            <div
+              className={`flex flex-column align-items-center gap-2 ${styles.cardContent}`}
+            >
               <div className="relative">
                 {product.discountPercent && (
-                  <div className="absolute float-discount p-3">
+                  <div className={`absolute ${styles.floatDiscount} p-3`}>
                     {product.discountPercent} %
                   </div>
                 )}
                 <img
-                  className="card-image"
+                  className={`${styles.cardImage}`}
                   src={`${BASE_URL}/${product.imageUrl}`}
                   alt=""
                 />
               </div>
-              <span className="product-name">{product.name}</span>
-              <span className="overflow-description text-justify">
+              <span className={`${styles.productName} productName`}>{product.name}</span>
+              <span className={`${styles.overflowDescription} text-justify`}>
                 {product.description}
               </span>
               <div className="flex flex-row justify-content-between align-items-end w-full">
                 <div>
                   {product.inStock && (
-                    <span className="in-stock">
+                    <span className={`${styles.inStock}`}>
                       <i className="bi bi-check-circle-fill"></i>
-                      {" Available"}
+                      {" Em stock"}
                     </span>
                   )}
                   {!product.inStock && (
-                    <span className="out-of-stock">
+                    <span className={`${styles.outOfStock}`}>
                       <i className="bi bi-x-circle-fill"></i>
-                      {" No stock"}
+                      {" Sem stock"}
                     </span>
                   )}
                 </div>
-                <div className="flex flex-column justify-content-end align-items-end price-continer">
+                <div
+                  className={`flex flex-column justify-content-end align-items-end ${styles.priceContainer}`}
+                >
                   {product.discountPrice && (
-                    <span>
-                      <s>{product.price.toFixed(2)} €</s>
-                    </span>
+                    <span className={`${styles.originalPrice}`}>{product.price.toFixed(2)} €</span>
                   )}
-                  <span className="price">
-                    Price:{" "}
-                    <span className="price val">
+                  <span className={`${styles.price}`}>
+                    Preço:{" "}
+                    <span className={`${styles.price} ${styles.val}`}>
                       {product.discountPrice
                         ? product.discountPrice.toFixed(2)
                         : product.price.toFixed(2)}{" "}
@@ -93,15 +94,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   </span>
                 </div>
               </div>
-              <div className="flex flex-row align-items-center gap-3 rating">
+              <div
+                className={`flex flex-row align-items-center gap-3 ${styles.rating}`}
+              >
                 {product.rating && (
                   <>
-                    Rating:
+                    Avaliação:
                     <span>{getStars()}</span>
                     {product.rating} / 5
                   </>
                 )}
-                {!product.rating && <span>No ratings yet.</span>}
+                {!product.rating && <span>Sem avaliações.</span>}
               </div>
             </div>
           </Card>

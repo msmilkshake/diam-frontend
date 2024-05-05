@@ -3,20 +3,19 @@ import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
 import React, { useState } from "react";
 import UserButtons from "./UserButtons.tsx";
-import "primeflex/primeflex.css";
 
 const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
   const navigate = useNavigate();
   const items = [
     {
-      label: "Home",
+      label: "Página Inicial",
       icon: "pi pi-home",
       command: () => {
         navigate("/");
       },
     },
     {
-      label: "Products",
+      label: "Todos os produtos",
       icon: "pi pi-desktop",
       command: () => {
         navigate("/products");
@@ -43,7 +42,7 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
       <Menubar
         style={{ border: "none", boxShadow: "none" }}
         model={items}
-        start={<Button icon="pi pi-bars" onClick={() => setVisible(true)} />}
+        start={<Button icon="pi pi-bars" onClick={() => setVisible(true)} className={`mr-4`} />}
         end={<UserButtons setCartSidebarVisible={setCartSidebarVisible}></UserButtons>}
       ></Menubar>
     </div>

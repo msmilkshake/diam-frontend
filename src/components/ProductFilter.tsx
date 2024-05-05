@@ -17,9 +17,9 @@ const ProductFilter = ({
 }) => {
   return (
       <div className="flex flex-column">
-          <h3>Filters</h3>
+          <h3>Filtros</h3>
           <Divider align="left">
-              <span>Price</span>
+              <span>Preço</span>
           </Divider>
           <div className="flex flex-column gap-4 align-items-center mb-4">
               <div className="flex flex-row justify-content-between w-full">
@@ -46,10 +46,10 @@ const ProductFilter = ({
                   onChange={onStockCheck}
                   inputId="stock-filter"
               ></Checkbox>
-              <label htmlFor="stock-filter">In stock only</label>
+              <label htmlFor="stock-filter">Apenas em stock</label>
           </div>
           <Divider align="left">
-              <span>Sale</span>
+              <span>Em promoção</span>
           </Divider>
           <div className="flex flex-row align-items-center justify-content-start gap-3 ml-4 mb-4">
               <Checkbox
@@ -57,12 +57,12 @@ const ProductFilter = ({
                   onChange={onSaleCheck}
                   inputId="sale-filter"
               ></Checkbox>
-              <label htmlFor="sale-filter">On sale only</label>
+              <label htmlFor="sale-filter">Apenas em promoção</label>
           </div>
           <div className="flex flex-row justify-content-center gap-3 my-4">
-              <Button onClick={onApplyFilterClick}>Apply</Button>
+              <Button onClick={onApplyFilterClick}>Aplicar</Button>
               <Button onClick={onResetFilterClick} outlined>
-                  Reset
+                  Limpar filtros
               </Button>
           </div>
       </div>

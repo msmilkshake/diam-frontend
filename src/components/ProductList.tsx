@@ -4,17 +4,17 @@ import { Card } from "primereact/card";
 import ProductCard, { ProductProps } from "./ProductCard.tsx";
 import ApiService from "../services/ApiService.ts";
 import { Dropdown } from "primereact/dropdown";
-
-import "./ProductList.css";
+import styles from "./ProductList.module.css";
+import "./ProductList.overrides.css"
 import { Paginator } from "primereact/paginator";
 import ProductFilter from "./ProductFilter.tsx";
 
 const sortOptions = [
-  "Name (Ascending)",
-  "Name (Descending)",
-  "Price (Ascending)",
-  "Price (Descending)",
-  "No sorting",
+  "Nome (Ascendente)",
+  "Nome (Descendente)",
+  "Preço (Ascendente)",
+  "Preço (Descendente)",
+  "Nenhum",
 ];
 
 const cardsPerPage = 9;
@@ -22,7 +22,7 @@ const cardsPerPage = 9;
 const ProductList = () => {
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
-  const title = searchParams.get("title") || "All products";
+  const title = searchParams.get("title") || "Todos os Produtos";
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [sortedProducts, setSortedProducts] = useState<ProductProps[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
@@ -32,7 +32,6 @@ const ProductList = () => {
   const [productMinMax, setproductMinMax] = useState([0, 0]);
   const [inStockFilter, setInStockFilter] = useState(false);
   const [inSaleFilter, setInSaleFilter] = useState(false);
-
 
   const getProducts = async (type?: string) => {
     let url = "/products";
@@ -160,7 +159,7 @@ const ProductList = () => {
       </div>
       <div className="grid">
         <div className="col-3">
-          <Card className="ml-4 sticky testclass">
+          <Card className={`ml-4 sticky ${styles.listFilter}`}>
             <ProductFilter
               priceSliderValue={priceSliderValue}
               productMinMax={productMinMax}
@@ -175,8 +174,8 @@ const ProductList = () => {
           </Card>
         </div>
         <div className="col-9">
-          <div className="flex flex-row justify-content-start align-items-center mx-4 gap-3">
-            <span>Sort by:</span>
+          <div className="flex flex-row justify-content-start align-items-center mx-4 gap-3 productList">
+            <span>Ordenar por:</span>
             <Dropdown
               options={sortOptions}
               value={sortBy}
@@ -186,9 +185,9 @@ const ProductList = () => {
               }}
             ></Dropdown>
           </div>
-          <div className="grid m-2">
+          <div className={`grid m-2 ${styles.cardItem}`}>
             {pageProducts.map((product: ProductProps) => (
-              <ProductCard key={`prod-id-${product.id}`} product={product} />
+              <ProductCard key={`prod-id-${product.id}`} product={product}/>
             ))}
           </div>
           <Paginator

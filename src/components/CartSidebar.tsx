@@ -1,6 +1,5 @@
 import { Sidebar } from "primereact/sidebar";
 import {useContext, useEffect, useState} from "react";
-import "primeflex/primeflex.css";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import { CartContext, CartDispatchContext } from "../contexts/CartContext.ts";

@@ -4,7 +4,6 @@ import { Badge } from "primereact/badge";
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 import { Dialog } from "primereact/dialog";
-import "primeflex/primeflex.css";
 import { InputText } from "primereact/inputtext";
 import axios from "axios";
 import Cookies from "js-cookie";

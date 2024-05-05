@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-import "primeflex/primeflex.css";
 
 
 import {InputText} from "primereact/inputtext";

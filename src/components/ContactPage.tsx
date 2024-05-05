@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-import "primeflex/primeflex.css";
 import { InputNumber } from "primereact/inputnumber";
 import {useContext, useEffect, useState} from "react";
 import { CartContext, CartDispatchContext } from "../contexts/CartContext.ts";
