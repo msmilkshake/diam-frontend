@@ -34,6 +34,22 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
       command: () => {
         navigate("/about");
       },
+    },{
+      label: "Gestão Interna",
+      items: [
+        {
+          label: "Gestão de Produtos",
+          command: () => {
+            navigate("/management/procucts");
+          },
+        },
+        {
+          label: "Gestão de Promoções",
+          command: () => {
+            navigate("/management/discounts");
+          },
+        },
+      ]
     },
   ];
 

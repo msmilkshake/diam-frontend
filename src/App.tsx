@@ -27,6 +27,7 @@ import ProductDetails from "./components/ProductDetails.tsx";
 import SignupPage from "./components/Signup.tsx";
 import Cookies from "js-cookie";
 import ApiService from "./services/ApiService.ts";
+import {ProductManagement} from "./components/ProductManagement.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -91,10 +92,14 @@ function App() {
                       <Route path="/about" element={<SignupPage />} />
                       <Route path="/contact" element={<ContactPage />} />
                       <Route path="/products" element={<ProductList />} />
+                      <Route path="/management/procucts" element={user?.is_superuser || user?.is_staff ? <ProductList /> : <Unauthorized />} />
+                      <Route path="/management/discounts" element={user?.is_superuser || user?.is_staff ? <ProductManagement /> : <Unauthorized />} />
+                      <Route path="/admin/users" element={user?.is_superuser ? <ProductList /> : <Unauthorized />} />
                       <Route
                         path="/products/:id"
                         element={<ProductDetails />}
                       />
+                      <Route path="*" element={<NotFound />} />
                     </Routes>
                   </MainContent>
                 </div>
@@ -109,3 +114,17 @@ function App() {
 }
 
 export default App;
+
+const Unauthorized = () => (
+    <div>
+      <h1 style={{color: "coral"}}>Não Autorizado</h1>
+      <p>Não tem autorização para aceder a esta página.</p>
+    </div>
+)
+
+const NotFound = () => (
+    <div>
+      <h1 style={{color: "coral"}}>404 Página Não Encontrada</h1>
+      <p>Pedimos desculpa, mas não conseguimos encontrar a página pretendida.</p>
+    </div>
+)
