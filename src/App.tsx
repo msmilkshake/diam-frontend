@@ -11,7 +11,6 @@ import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
 import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import HomePage from "./components/HomePage.tsx";
-import AboutPage from "./components/AboutPage.tsx";
 import ContactPage from "./components/ContactPage.tsx";
 import AppNavbar from "./components/AppNavbar.tsx";
 import AppFooter from "./components/AppFooter.tsx";
@@ -31,7 +30,6 @@ import {
 import CartSidebar from "./components/CartSidebar.tsx";
 import ProductDetails from "./components/ProductDetails.tsx";
 import SignupPage from "./components/Signup.tsx";
-import Cookies from "js-cookie";
 import ApiService from "./services/ApiService.ts";
 import { ProductManagement } from "./components/ProductManagement.tsx";
 import { ToastContext, ToastFunction } from "./contexts/ToastContext.ts";
