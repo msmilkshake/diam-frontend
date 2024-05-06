@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import {LoginContext, LoginDispatchContext} from "../contexts/LoginContext.ts";
 import {CartContext} from "../contexts/CartContext.ts";
 import {useNavigate} from "react-router-dom";
+import {useToast} from "../contexts/ToastContext.ts";
 
 const UserButtons = ({setCartSidebarVisible}) => {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
 
   const userDispatch = useContext(LoginDispatchContext)
   const user = useContext(LoginContext)
+
+  const showToast = useToast();
 
   useEffect(() => {
     const sessionCookie = localStorage.getItem("sessionid");
@@ -182,6 +185,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
     })
     setIsLoggedIn(false);
     setLoginVisible(false)
+    showToast("info", "Logout", "Efetuou logout com sucesso.")
   };
 
   return (

@@ -1,5 +1,11 @@
 import "./App.css";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import "primeflex/primeflex.css";
 import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
@@ -27,7 +33,9 @@ import ProductDetails from "./components/ProductDetails.tsx";
 import SignupPage from "./components/Signup.tsx";
 import Cookies from "js-cookie";
 import ApiService from "./services/ApiService.ts";
-import {ProductManagement} from "./components/ProductManagement.tsx";
+import { ProductManagement } from "./components/ProductManagement.tsx";
+import { ToastContext, ToastFunction } from "./contexts/ToastContext.ts";
+import { Toast } from "primereact/toast";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -40,43 +48,47 @@ function App() {
   // const cartDispatch = useContext(CartDispatchContext)
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/check-session',{
-      params: {
-        sessionid: localStorage.getItem("sessionid"),
-      }
-    }).then(response => {
-      // console.log(response.data)
-      if (response.data.status === "valid"){
-        userDispatch!({
-          type: "login",
-          user: {
-            id: response.data.userid,
-            username: response.data.username,
-          }
-        })
-      }
-      else{
-        userDispatch!({
-          type: "logout",
-          user: null,
-        })
-      }
-    })
+    axios
+      .get("http://localhost:8000/api/check-session", {
+        params: {
+          sessionid: localStorage.getItem("sessionid"),
+        },
+      })
+      .then((response) => {
+        // console.log(response.data)
+        if (response.data.status === "valid") {
+          userDispatch!({
+            type: "login",
+            user: {
+              id: response.data.userid,
+              username: response.data.username,
+            },
+          });
+        } else {
+          userDispatch!({
+            type: "logout",
+            user: null,
+          });
+        }
+      });
   }, []);
 
   useEffect(() => {
-    getDbCart()
-    console.log(user)
+    getDbCart();
+    console.log(user);
   }, [user]);
   const getDbCart = async () => {
-    const cart = (await ApiService.get("/cart") ||
-        []) as CartItem[];
+    const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
     cartDispatch({
       type: "restore",
       payload: cart,
     });
-  }
+  };
+  const toast = useRef<Toast>(null);
 
+  const showToast: ToastFunction = (severity, summary, detail) => {
+    toast.current?.show({ severity, summary, detail });
+  };
 
   return (
     <BrowserRouter>
@@ -84,39 +96,69 @@ function App() {
         <CartDispatchContext.Provider value={cartDispatch}>
           <LoginContext.Provider value={user}>
             <LoginDispatchContext.Provider value={userDispatch}>
-              <div className="App">
-                <AppNavbar
-                  setCartSidebarVisible={setCartSidebarVisible}
-                  setVisible={setAppSidebarVisible}
-                ></AppNavbar>
-                <AppSidebar
-                  visible={appSidebarVisible}
-                  setVisible={setAppSidebarVisible}
-                ></AppSidebar>
-                <CartSidebar
-                  visible={cartSidebarVisible}
-                  setVisible={setCartSidebarVisible}
-                ></CartSidebar>
-                <div className="flex flex-row justify-content-center">
-                  <MainContent>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/signup" element={<SignupPage />} />
-                      <Route path="/contact" element={<ContactPage />} />
-                      <Route path="/products" element={<ProductList />} />
-                      <Route path="/management/procucts" element={user?.is_superuser || user?.is_staff ? <ProductManagement /> : <Unauthorized />} />
-                      <Route path="/management/discounts" element={user?.is_superuser || user?.is_staff ? <ProductManagement /> : <Unauthorized />} />
-                      <Route path="/admin/users" element={user?.is_superuser ? <ProductList /> : <Unauthorized />} />
-                      <Route
-                        path="/products/:id"
-                        element={<ProductDetails />}
-                      />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </MainContent>
+              <ToastContext.Provider value={showToast}>
+                <Toast ref={toast}></Toast>
+                <div className="App">
+                  <AppNavbar
+                    setCartSidebarVisible={setCartSidebarVisible}
+                    setVisible={setAppSidebarVisible}
+                  ></AppNavbar>
+                  <AppSidebar
+                    visible={appSidebarVisible}
+                    setVisible={setAppSidebarVisible}
+                  ></AppSidebar>
+                  <CartSidebar
+                    visible={cartSidebarVisible}
+                    setVisible={setCartSidebarVisible}
+                  ></CartSidebar>
+                  <div className="flex flex-row justify-content-center">
+                    <MainContent>
+                      <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/contact" element={<ContactPage />} />
+                        <Route path="/products" element={<ProductList />} />
+                        <Route
+                          path="/management/procucts"
+                          element={
+                            user?.is_superuser || user?.is_staff ? (
+                              <ProductManagement />
+                            ) : (
+                              <Unauthorized />
+                            )
+                          }
+                        />
+                        <Route
+                          path="/management/discounts"
+                          element={
+                            user?.is_superuser || user?.is_staff ? (
+                              <ProductManagement />
+                            ) : (
+                              <Unauthorized />
+                            )
+                          }
+                        />
+                        <Route
+                          path="/admin/users"
+                          element={
+                            user?.is_superuser ? (
+                              <ProductList />
+                            ) : (
+                              <Unauthorized />
+                            )
+                          }
+                        />
+                        <Route
+                          path="/products/:id"
+                          element={<ProductDetails />}
+                        />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </MainContent>
+                  </div>
+                  <AppFooter></AppFooter>
                 </div>
-                <AppFooter></AppFooter>
-              </div>
+              </ToastContext.Provider>
             </LoginDispatchContext.Provider>
           </LoginContext.Provider>
         </CartDispatchContext.Provider>
@@ -128,15 +170,15 @@ function App() {
 export default App;
 
 const Unauthorized = () => (
-    <div>
-      <h1 style={{color: "coral"}}>Não Autorizado</h1>
-      <p>Não tem autorização para aceder a esta página.</p>
-    </div>
-)
+  <div>
+    <h1 style={{ color: "coral" }}>Não Autorizado</h1>
+    <p>Não tem autorização para aceder a esta página.</p>
+  </div>
+);
 
 const NotFound = () => (
-    <div>
-      <h1 style={{color: "coral"}}>404 Página Não Encontrada</h1>
-      <p>Pedimos desculpa, mas não conseguimos encontrar a página pretendida.</p>
-    </div>
-)
+  <div>
+    <h1 style={{ color: "coral" }}>404 Página Não Encontrada</h1>
+    <p>Pedimos desculpa, mas não conseguimos encontrar a página pretendida.</p>
+  </div>
+);
