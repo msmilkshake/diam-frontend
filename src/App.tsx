@@ -64,6 +64,18 @@ function App() {
     })
   }, []);
 
+  useEffect(() => {
+    getDbCart()
+    console.log(user)
+  }, [user]);
+  const getDbCart = async () => {
+    const cart = (await ApiService.get("/cart") ||
+        []) as CartItem[];
+    cartDispatch({
+      type: "restore",
+      payload: cart,
+    });
+  }
 
 
   return (
@@ -92,7 +104,7 @@ function App() {
                       <Route path="/signup" element={<SignupPage />} />
                       <Route path="/contact" element={<ContactPage />} />
                       <Route path="/products" element={<ProductList />} />
-                      <Route path="/management/procucts" element={user?.is_superuser || user?.is_staff ? <ProductList /> : <Unauthorized />} />
+                      <Route path="/management/procucts" element={user?.is_superuser || user?.is_staff ? <ProductManagement /> : <Unauthorized />} />
                       <Route path="/management/discounts" element={user?.is_superuser || user?.is_staff ? <ProductManagement /> : <Unauthorized />} />
                       <Route path="/admin/users" element={user?.is_superuser ? <ProductList /> : <Unauthorized />} />
                       <Route
