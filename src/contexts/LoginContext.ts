@@ -21,7 +21,7 @@ export const LoginDispatchContext = createContext<Dispatch<UserAction> | null>(
 export const loginReducer = (user: User | null, action: UserAction) => {
   switch (action.type) {
     case "login": {
-      console.log("in LOGIN action")
+      console.log("in LOGIN action", action.user)
       return action.user;
     }
     case "logout":

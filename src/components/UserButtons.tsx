@@ -63,6 +63,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
           user: {
             id: response.data.userid,
             username: response.data.username,
+            is_superuser: response.data.is_superuser,
+            is_staff: response.data.is_staff,
           }
         })
         setUsername("");
@@ -167,6 +169,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
       user: null,
     })
     setIsLoggedIn(false);
+    setLoginVisible(false)
   };
 
   return (
