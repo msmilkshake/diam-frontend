@@ -123,11 +123,12 @@ const HomePage = () => {
       <Carousel
         verticalViewPortHeight="150px"
         value={products}
-        numVisible={3}
+        numVisible={4}
         numScroll={3}
         responsiveOptions={responsiveOptions}
         itemTemplate={productTemplate}
         circular
+        autoplayInterval={3000}
       />
       HomePage works! :)
     </>

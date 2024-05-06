@@ -53,13 +53,14 @@ function App() {
         },
       })
       .then((response) => {
-        // console.log(response.data)
         if (response.data.status === "valid") {
           userDispatch!({
             type: "login",
             user: {
               id: response.data.user.id,
               username: response.data.user.username,
+              is_staff: response.data.user.is_staff,
+              is_superuser: response.data.user.is_superuser,
             },
           });
         } else {
@@ -69,11 +70,11 @@ function App() {
           });
         }
       });
+
   }, []);
 
   useEffect(() => {
     getDbCart();
-    console.log(user);
   }, [user]);
   const getDbCart = async () => {
     const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
