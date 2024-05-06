@@ -89,7 +89,7 @@ function App() {
                   <MainContent>
                     <Routes>
                       <Route path="/" element={<HomePage />} />
-                      <Route path="/about" element={<SignupPage />} />
+                      <Route path="/signup" element={<SignupPage />} />
                       <Route path="/contact" element={<ContactPage />} />
                       <Route path="/products" element={<ProductList />} />
                       <Route path="/management/procucts" element={user?.is_superuser || user?.is_staff ? <ProductList /> : <Unauthorized />} />

@@ -37,7 +37,7 @@ const ContactPage = () => {
             },
           },
       );
-      console.log('Adicionado item ao carrinho:', response.data);
+      // console.log('Adicionado item ao carrinho:', response.data);
     }
     else{
       getProduct(id).then((product: ProductProps) => {

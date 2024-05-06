@@ -25,6 +25,7 @@ interface SignupFormProps {
 const countries = ["Portugal", "Espanha"];
 
 const SignupPage = () => {
+
   const [countryDropdown, setCountryDropdown] = useState(countries[0]);
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,6 +43,7 @@ const SignupPage = () => {
       const phone = e.target.elements.phone.value;
       const vat = e.target.elements.vat.value;
 
+      await axios.get("http://localhost:8000/api/login")
       const response = await axios.post(
           "http://localhost:8000/api/signup",
           {
@@ -71,6 +73,7 @@ const SignupPage = () => {
 
   return (
     <>
+      <h1>Página de Registo</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-column gap-3 align-items-center">
           <Divider>

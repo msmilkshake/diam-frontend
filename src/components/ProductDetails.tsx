@@ -46,7 +46,7 @@ const ProductDetails = () => {
     getProduct()
       .then((product: ProductProps) => {
         setProduct(product);
-        console.log(product);
+        // console.log(product);
       })
       .catch((error) => console.error(error));
     getReviews();
@@ -56,7 +56,7 @@ const ProductDetails = () => {
     const url = `/reviews?product_id=${id}`;
     const response =  await ApiService.get(url) as Review[];
     setReviews(response);
-    console.log("[ProductDetails]",response);
+    // console.log("[ProductDetails]",response);
   }
 
   const submitReview = async (review: Review) => {

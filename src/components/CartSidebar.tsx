@@ -24,11 +24,22 @@ const CartSidebar = ({ visible, setVisible }) => {
       type: "restore",
       payload: cart,
     });
-    console.log(cart)
+    // console.log(cart)
   }
 
   const handleClear = () => {
-    cartDispatch!({ type: "clear", payload: [] });
+    if (user){
+      axios.delete("http://localhost:8000/api/cart", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get("csrftoken"),
+        },
+      })
+      getDbCart()
+    }
+    else {
+      cartDispatch!({type: "clear", payload: []});
+    }
   };
   const handlePurchase = async () => {
     if (user) {
@@ -42,7 +53,7 @@ const CartSidebar = ({ visible, setVisible }) => {
           },
         },
       );
-      console.log("Encomenda realizada:", response.data);
+      // console.log("Encomenda realizada:", response.data);
     }
     else{
       handleClear();

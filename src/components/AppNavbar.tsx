@@ -29,12 +29,6 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
       },
     },
     {
-      label: "About",
-      icon: "pi pi-search",
-      command: () => {
-        navigate("/about");
-      },
-    },{
       label: "Gestão Interna",
       items: [
         {

@@ -43,7 +43,7 @@ const ProductList = () => {
 
   useEffect(() => {
     setSortBy(sortOptions[4]);
-    console.log("effect");
+    // console.log("effect");
     getProducts(type)
       .then((prodArray: ProductProps[]) => {
         setProducts(prodArray);

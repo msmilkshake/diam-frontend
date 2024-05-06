@@ -8,8 +8,12 @@ import { InputText } from "primereact/inputtext";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {LoginContext, LoginDispatchContext} from "../contexts/LoginContext.ts";
+import {CartContext} from "../contexts/CartContext.ts";
+import {useNavigate} from "react-router-dom";
 
 const UserButtons = ({setCartSidebarVisible}) => {
+  const navigate = useNavigate();
+  const cartContext = useContext(CartContext)
   const [cartItems, setCartItems] = useState(0);
   const [visible, setVisible] = useState(false);
   const [dialogPos, setDialogPos] = useState({ top: "0", left: "0" });
@@ -96,12 +100,24 @@ const UserButtons = ({setCartSidebarVisible}) => {
     );
   };
 
+  useEffect(() => {
+    setBadgeNumber(calculateCartItems())
+  }, [cartContext]);
+
+  const calculateCartItems = () => {
+    return cartContext?.reduce((total, item) => {
+      return total + item.quantity;
+    }, 0);
+  }
+  const [badgeNumber, setBadgeNumber] = useState(calculateCartItems())
+
+
   const cartRenderer = (icon) => {
     return (
       <>
         <div className="flex flex-row align-content-center gap-1">
           <i className={`bi ${icon}`} style={{ fontSize: "1.2rem" }}></i>
-          <Badge value={cartItems} severity="danger"></Badge>
+          <Badge value={badgeNumber} severity="danger"></Badge>
         </div>
       </>
     );
@@ -120,12 +136,12 @@ const UserButtons = ({setCartSidebarVisible}) => {
     setCartSidebarVisible(true);
   }
   const items = [
-    {
-      label: itemRenderer("bi-plus"),
-      command: () => {
-        setCartItems(cartItems + 1);
-      },
-    },
+    // {
+    //   // label: itemRenderer("bi-plus"),
+    //   // command: () => {
+    //   //   setCartItems(cartItems + 1);
+    //   // },
+    // },
     {
       label: itemRenderer("bi-person"),
       command: (event) => {
@@ -206,6 +222,11 @@ const UserButtons = ({setCartSidebarVisible}) => {
                 ></InputText>
               </div>
               <Button label="Login" type="submit" />
+              <Button onClick={(e) => {
+                e.preventDefault();
+                navigate("/signup");
+                setLoginVisible(false);
+              }} label="Signup"></Button>
             </div>
           </form>
         </Dialog>
