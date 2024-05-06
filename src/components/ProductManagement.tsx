@@ -1,6 +1,6 @@
 import { DataTable } from "primereact/datatable";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import ApiService from "../services/ApiService.ts";
+import ApiService, { BASE_URL } from "../services/ApiService.ts";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -8,20 +8,23 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
-import { FileUpload } from "primereact/fileupload";
+import {
+  FileUpload,
+  FileUploadHandlerEvent,
+} from "primereact/fileupload";
 
 interface ProductProps {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  inStock: boolean;
-  stock: number;
-  price: number;
-  rating: number;
+  id?: number;
+  name?: string;
+  description?: string;
+  imageUrl?: string;
+  inStock?: boolean;
+  stock?: number;
+  price?: number;
+  rating?: number;
   discountPrice?: number;
   discountPercent?: number;
-  producttype_id: number;
+  producttype_id?: number;
 }
 
 interface CategoriesProps {
@@ -40,15 +43,33 @@ type DropVal = {
   value: number;
 };
 
+const mandatoryFields: (keyof ProductProps)[] = [
+  "name",
+  "description",
+  "stock",
+  "price",
+  "producttype_id",
+];
+
 export const ProductManagement = () => {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [selectedRow, setSelectedRow] = useState<ProductProps | null>(null);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [product, setProduct] = useState<ProductProps | null>();
+  const [product, setProduct] = useState<ProductProps>({});
+
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<number | null>();
+  const [stock, setStock] = useState<number | null>();
+
   const [catsDropValues, setCatsDropValues] = useState<DropVal[]>([]);
   const [typesDropValues, setTypesDropValues] = useState<DropVal[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(-1);
+
   const [selectedType, setSelectedType] = useState(-1);
+  const [imageToUpload, setImageToUpload] = useState<File | null>(null);
+
+  const [formErrors, setFormErrors] = useState(false);
 
   const dt = useRef(null);
 
@@ -101,13 +122,25 @@ export const ProductManagement = () => {
     getTypesValues(selectedCategory);
   }, [selectedCategory]);
 
+  const clearForm = () => {
+    setProduct({});
+    setName("");
+    setDescription("");
+    setPrice(null);
+    setStock(null);
+    setSelectedCategory(0);
+    setSelectedType(0);
+    setImageToUpload(null);
+  };
+
   const handleAdd = () => {
-    // handle add here.
+    console.log("add clicked");
+    clearForm();
+    setDialogVisible(true);
     console.log("add clicked");
   };
 
   const handleEdit = async () => {
-    // handle edit here.
     console.log("edit clicked");
 
     const type = (await ApiService.get(
@@ -118,8 +151,14 @@ export const ProductManagement = () => {
 
     await getTypesValues(type.productcategory_id);
 
+    setName(selectedRow!.name!);
+    setDescription(selectedRow!.description!);
+    setPrice(selectedRow?.price);
+    setStock(selectedRow?.stock);
+    setImageToUpload(null);
     setSelectedType(type.id);
-    setProduct(selectedRow);
+
+    setProduct(selectedRow!);
     setDialogVisible(true);
   };
 
@@ -167,7 +206,25 @@ export const ProductManagement = () => {
     setSelectedRow(event.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const validForm =
+      !!name &&
+      !!description &&
+      price !== null &&
+      stock !== null &&
+      !!selectedType &&
+      !!imageToUpload;
+    console.log("Valid form:", validForm)
+    if (!validForm) {
+      setFormErrors(true);
+      return;
+    }
+    setFormErrors(false);
+
+    // Upload da imagem
+    const path =await uploadFile();
+
+    // Guardar o produto
     console.log(product);
     hideDialog();
   };
@@ -178,10 +235,31 @@ export const ProductManagement = () => {
 
   const dialogFooter = (
     <div className="ui-dialog-buttonpane p-clearfix">
-      <Button label="Cancelar" icon="pi pi-times" onClick={hideDialog} />
-      <Button label="Salvar" icon="pi pi-check" onClick={handleSubmit} />
+      <div className="flex flex-row justify-content-between w-100">
+        {formErrors && (
+          <span style={{ color: "indianred", marginTop: "0.5rem" }}>
+            Todos os campos são obrigatórios.
+          </span>
+        )}
+        <div className="flex-grow-1">
+          <Button label="Cancelar" icon="pi pi-times" onClick={hideDialog} />
+          <Button type="submit" label="Salvar" icon="pi pi-check" onClick={handleSubmit} />
+        </div>
+      </div>
     </div>
   );
+
+  const handleUpload = (event: FileUploadHandlerEvent) => {
+    setImageToUpload(event.files[0]);
+    console.log("Upload File is set!", event.files[0]);
+    console.log(event);
+  };
+
+  const uploadFile = async () => {
+    const formData = new FormData();
+    formData.append("image", imageToUpload!, imageToUpload!.name);
+    return await ApiService.post("upload", formData);
+  };
 
   return (
     <>
@@ -239,80 +317,59 @@ export const ProductManagement = () => {
       </DataTable>
       <Dialog
         visible={dialogVisible}
-        style={{ width: "40vw" }}
+        style={{ width: "44vw" }}
         onHide={hideDialog}
         footer={dialogFooter}
       >
-        <h2>A editar produto #{product?.id}</h2>
+        {product.id && <h2>A editar produto #{product?.id}</h2>}
+        {!product.id && <h2>Adicionar novo produto</h2>}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-column gap-2">
             <div className="field flex flex-column">
               <label htmlFor="name">Nome</label>
               <InputText
                 id="name"
-                value={product?.name}
-                onChange={(e) =>
-                  // @ts-expect-error types
-                  setProduct((prevProduct) => ({
-                    ...prevProduct,
-                    name: e.target.value,
-                  }))
-                }
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="field flex flex-column align-items-start">
               <label htmlFor="description">Descrição</label>
               <InputTextarea
                 id="description"
-                value={product?.description}
+                value={description}
                 style={{
                   minWidth: "100%",
                   maxWidth: "100%",
                   minHeight: "200px",
                 }}
-                onChange={(e) =>
-                  // @ts-expect-error types
-                  setProduct((prevProduct) => ({
-                    ...prevProduct,
-                    description: e.target.value,
-                  }))
-                }
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             <div className="field flex flex-column align-items-start">
               <label htmlFor="price">Preço (€)</label>
               <InputNumber
                 id="price"
-                value={product?.price}
+                value={price}
                 minFractionDigits={0}
                 maxFractionDigits={2}
                 showButtons
+                min={0}
                 buttonLayout="stacked"
                 step={0.1}
-                onValueChange={(e) =>
-                  // @ts-expect-error types
-                  setProduct((prevProduct) => ({
-                    ...prevProduct,
-                    price: e.value,
-                  }))
-                }
+                onValueChange={(e) => setPrice(e.value)}
               />
             </div>
             <div className="field flex flex-column align-items-start">
               <label htmlFor="price">Stock (Unid.)</label>
               <InputNumber
-                id="price"
-                value={product?.stock}
+                id="stock"
+                value={stock}
                 showButtons
                 buttonLayout="stacked"
+                min={0}
                 step={1}
-                onValueChange={(e) =>
-                  // @ts-expect-error types
-                  setProduct((prevProduct) => ({
-                    ...prevProduct,
-                    price: e.value,
-                  }))
-                }
+                onValueChange={(e) => setStock(e.value)}
               />
             </div>
             <div className="field flex flex-column align-items-start">
@@ -328,20 +385,34 @@ export const ProductManagement = () => {
               <label htmlFor="type">Tipo de produto (Subcategoria)</label>
               <Dropdown
                 id="type"
+                disabled={selectedCategory < 1}
                 value={selectedType}
                 options={typesDropValues}
                 onChange={(e) => setSelectedType(e.value)}
               />
             </div>
+            {product.id && (
+              <div className="field flex flex-column align-items-start ">
+                Imagem
+                <img
+                  src={`${BASE_URL}/${product.imageUrl}`}
+                  alt=""
+                  className="h-12rem m-2"
+                />
+                {product.imageUrl}
+              </div>
+            )}
             <div className="field flex flex-column align-items-start">
-              <label htmlFor="image">Tipo de produto (Subcategoria)</label>
+              {product.id && <label htmlFor="image">Substituir imagem</label>}
+              {!product.id && <label htmlFor="image">Imagem</label>}
               <FileUpload
+                customUpload={true}
+                uploadHandler={handleUpload}
+                onRemove={() => setImageToUpload(null)}
+                auto
                 name="image"
-                url={"/api/upload"}
-                auto={false}
+                // mode="basic"
                 chooseLabel="Escolher..."
-                uploadLabel="Carregar"
-                cancelLabel="Limpar"
                 accept="image/*"
                 emptyTemplate={
                   <p className="m-0">Arraste a imagem para aqui.</p>
