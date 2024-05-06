@@ -60,8 +60,8 @@ function App() {
           userDispatch!({
             type: "login",
             user: {
-              id: response.data.userid,
-              username: response.data.username,
+              id: response.data.user.id,
+              username: response.data.user.username,
             },
           });
         } else {
