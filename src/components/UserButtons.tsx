@@ -28,6 +28,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
   const userDispatch = useContext(LoginDispatchContext)
   const user = useContext(LoginContext)
   const [userIcon, setUserIcon] = useState()
+  const [cartIcon, setCartIcon] = useState()
   const showToast = useToast();
 
   useEffect(() => {
@@ -112,7 +113,14 @@ const UserButtons = ({setCartSidebarVisible}) => {
   };
 
   useEffect(() => {
-    setBadgeNumber(calculateCartItems())
+    const total = calculateCartItems()
+    setBadgeNumber(total)
+    if (total! > 0){
+      setCartIcon("bi-cart-fill")
+    }else{
+      setCartIcon("bi-cart")
+    }
+
   }, [cartContext]);
 
   const calculateCartItems = () => {
@@ -154,7 +162,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
       },
     },
     {
-      label: cartRenderer("bi-cart"),
+      label: cartRenderer(cartIcon),
       command: () => {
         toggleCartSidebar();
       },
