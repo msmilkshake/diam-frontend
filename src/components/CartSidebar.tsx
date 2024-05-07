@@ -64,6 +64,7 @@ const CartSidebar = ({ visible, setVisible }) => {
         },
       );
       // console.log("Encomenda realizada:", response.data);
+      getDbCart();
     }
     else{
       handleClear();

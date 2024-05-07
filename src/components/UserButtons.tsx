@@ -27,7 +27,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
 
   const userDispatch = useContext(LoginDispatchContext)
   const user = useContext(LoginContext)
-
+  const [userIcon, setUserIcon] = useState()
   const showToast = useToast();
 
   useEffect(() => {
@@ -35,6 +35,9 @@ const UserButtons = ({setCartSidebarVisible}) => {
     // console.log("session cookie:", sessionCookie);
     if (sessionCookie) {
       setIsLoggedIn(true);
+      setUserIcon("bi bi-person-fill")
+    }else{
+      setUserIcon("bi bi-person")
     }
   }, []);
 
@@ -73,6 +76,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
         setUsername("");
         setPassword("");
         setIsLoggedIn(true)
+        setUserIcon("bi bi-person-fill")
         setLoginVisible(false)
         showToast!("success", "Login efetuado com sucesso", "Bem-vindo " + response.data.username);
         console.log("Logged in with username: ", response.data.username)
@@ -143,14 +147,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
     setCartSidebarVisible(true);
   }
   const items = [
-    // {
-    //   // label: itemRenderer("bi-plus"),
-    //   // command: () => {
-    //   //   setCartItems(cartItems + 1);
-    //   // },
-    // },
     {
-      label: itemRenderer("bi-person"),
+      label: itemRenderer(userIcon),
       command: (event) => {
         show(event);
       },
@@ -187,7 +185,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
     })
     setIsLoggedIn(false);
     setLoginVisible(false)
-    showToast("info", "Logout", "Efetuou logout com sucesso.")
+    setUserIcon("bi bi-person")
+    showToast!("info", "Logout", "Efetuou logout com sucesso.")
   };
 
   return (
@@ -242,7 +241,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
       )}
       {isLoggedIn && (
         <Dialog
-          header="Iniciar sessão"
+          header="Detalhes da conta"
           visible={loginVisible}
           style={{ width: "400px", position: "fixed", ...dialogPos }}
           onHide={() => setLoginVisible(false)}
