@@ -30,8 +30,8 @@ const UserButtons = ({ setCartSidebarVisible }) => {
   const userDispatch = useContext(LoginDispatchContext);
   const user = useContext(LoginContext);
 
-  const [userIcon, setUserIcon] = useState()
-  const [cartIcon, setCartIcon] = useState()
+  const [userIcon, setUserIcon] = useState();
+  const [cartIcon, setCartIcon] = useState();
 
   const showToast = useToast();
 
@@ -39,9 +39,9 @@ const UserButtons = ({ setCartSidebarVisible }) => {
     const sessionCookie = localStorage.getItem("sessionid");
     if (sessionCookie) {
       setIsLoggedIn(true);
-      setUserIcon("bi bi-person-fill")
-    }else{
-      setUserIcon("bi bi-person")
+      setUserIcon("bi bi-person-fill");
+    } else {
+      setUserIcon("bi bi-person");
     }
   }, []);
 
@@ -78,11 +78,15 @@ const UserButtons = ({ setCartSidebarVisible }) => {
         localStorage.setItem("sessionid", response.data.session_key);
         setUsername("");
         setPassword("");
-        setIsLoggedIn(true)
-        setUserIcon("bi bi-person-fill")
-        setLoginVisible(false)
-        showToast!("success", "Login efetuado com sucesso", "Bem-vindo " + response.data.username);
-        console.log("Logged in with username: ", response.data.username)
+        setIsLoggedIn(true);
+        setUserIcon("bi bi-person-fill");
+        setLoginVisible(false);
+        showToast!(
+          "success",
+          "Login efetuado com sucesso",
+          "Bem-vindo " + response.data.username,
+        );
+        console.log("Logged in with username: ", response.data.username);
         setIsLoggedIn(true);
         setLoginError(false);
         console.log("Logged in with username: ", response.data.username);
@@ -120,14 +124,13 @@ const UserButtons = ({ setCartSidebarVisible }) => {
   };
 
   useEffect(() => {
-    const total = calculateCartItems()
-    setBadgeNumber(total)
-    if (total! > 0){
-      setCartIcon("bi-cart-fill")
-    }else{
-      setCartIcon("bi-cart")
+    const total = calculateCartItems();
+    setBadgeNumber(total);
+    if (total! > 0) {
+      setCartIcon("bi-cart-fill");
+    } else {
+      setCartIcon("bi-cart");
     }
-
   }, [cartContext]);
 
   const calculateCartItems = () => {
@@ -181,9 +184,9 @@ const UserButtons = ({ setCartSidebarVisible }) => {
       user: null,
     });
     setIsLoggedIn(false);
-    setLoginVisible(false)
-    setUserIcon("bi bi-person")
-    showToast!("info", "Logout", "Efetuou logout com sucesso.")
+    setLoginVisible(false);
+    setUserIcon("bi bi-person");
+    showToast!("info", "Logout", "Efetuou logout com sucesso.");
   };
 
   return (
@@ -263,9 +266,9 @@ const UserButtons = ({ setCartSidebarVisible }) => {
         >
           <div className="flex flex-column align-content-start flex-wrap gap-3">
             <h2>Olá {user?.username}!</h2>
-            <Button onClick={handleLogout}>Terminar sessão</Button>
+              <Button onClick={handleLogout}>Histórico de encomendas</Button>
             <div className="block">
-            <Button onClick={handleLogout}>Histórico de encomendas</Button>
+            <Button icon="pi pi-sign-out" onClick={handleLogout}><span className="ml-2">Terminar sessão</span></Button>
             </div>
           </div>
         </Dialog>
