@@ -96,17 +96,15 @@ const CartSidebar = ({ visible, setVisible }) => {
         <div>
           <DataTable
             value={cartItems}
+            emptyMessage={<span>Carrinho vazio!</span>}
             footer={
-            <div className="flex flex-column">
-              <div>
-                {cartItems?.length === 0 && <span>Carrinho vazio!</span>}
-                {cartItems?.length !== 0 && <h3>Total: {total}€</h3>}
+              <div className="flex flex-column gap-3">
+                <div>{cartItems?.length !== 0 && <h3>Total: {total}€</h3>}</div>
+                <div className="flex flex-row justify-content-between gap-3">
+                  <Button onClick={handleClear}>Limpar carrinho</Button>
+                  <Button onClick={handlePurchase}>Finalizar Encomenda</Button>
+                </div>
               </div>
-              <div className="flex flex-row justify-content-between gap-3">
-                <Button onClick={handleClear}>Limpar carrinho</Button>
-                <Button onClick={handlePurchase}>Finalizar Encomenda</Button>
-              </div>
-            </div>
             }
           >
             <Column

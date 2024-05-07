@@ -11,7 +11,6 @@ import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
 import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import HomePage from "./components/HomePage.tsx";
-import ContactPage from "./components/ContactPage.tsx";
 import AppNavbar from "./components/AppNavbar.tsx";
 import AppFooter from "./components/AppFooter.tsx";
 import axios from "axios";
@@ -115,7 +114,6 @@ function App() {
                       <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/signup" element={<SignupPage />} />
-                        <Route path="/contact" element={<ContactPage />} />
                         <Route path="/products" element={<ProductList />} />
                         <Route
                           path="/management/procucts"
