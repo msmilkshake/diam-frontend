@@ -7,16 +7,16 @@ import ApiService, { BASE_URL } from "../services/ApiService.ts";
 import { ProductProps } from "./ProductCard.tsx";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-import { DataView, DataViewLayoutOptions } from "primereact/dataview";
+import { DataView } from "primereact/dataview";
 import { Divider } from "primereact/divider";
 import { Badge } from "primereact/badge";
-import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Checkbox } from "primereact/checkbox";
 import { LoginContext } from "../contexts/LoginContext.ts";
 import Cookies from "js-cookie";
 import axios from "axios";
 import {CartDispatchContext, CartItem} from "../contexts/CartContext.ts";
+import {useToast} from "../contexts/ToastContext.ts";
 
 type Review = {
   review: string;
@@ -36,6 +36,7 @@ const ProductDetails = () => {
   const [reviewBought, setReviewBought] = useState<boolean>(false);
 
   const loginContext = useContext(LoginContext);
+  const showToast = useToast();
 
   const getProduct = async () => {
     const url = `/products/${id}`;
@@ -78,6 +79,7 @@ const ProductDetails = () => {
         },
     );
     getReviews()
+    showToast!("success", "Avaliação", "Avaliação submetida com sucesso")
   }
 
 
@@ -193,6 +195,7 @@ const ProductDetails = () => {
     else{
         cartDispatch!({type: "add", payload: {id: parseInt(id!), quantity: cartQty, price: product!.price}});
     }
+    showToast!("success", "Carrinho", "Adicionado produto ao carrinho")
   }
 
   return (

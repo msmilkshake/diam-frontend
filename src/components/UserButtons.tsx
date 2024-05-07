@@ -73,6 +73,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
         setUsername("");
         setPassword("");
         setIsLoggedIn(true)
+        setLoginVisible(false)
+        showToast!("success", "Login efetuado com sucesso", "Bem-vindo " + response.data.username);
         console.log("Logged in with username: ", response.data.username)
       } else {
         console.log("Login failed! response:", response)
