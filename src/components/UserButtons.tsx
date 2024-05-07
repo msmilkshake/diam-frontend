@@ -30,12 +30,18 @@ const UserButtons = ({ setCartSidebarVisible }) => {
   const userDispatch = useContext(LoginDispatchContext);
   const user = useContext(LoginContext);
 
+  const [userIcon, setUserIcon] = useState()
+  const [cartIcon, setCartIcon] = useState()
+
   const showToast = useToast();
 
   useEffect(() => {
     const sessionCookie = localStorage.getItem("sessionid");
     if (sessionCookie) {
       setIsLoggedIn(true);
+      setUserIcon("bi bi-person-fill")
+    }else{
+      setUserIcon("bi bi-person")
     }
   }, []);
 
@@ -72,6 +78,11 @@ const UserButtons = ({ setCartSidebarVisible }) => {
         localStorage.setItem("sessionid", response.data.session_key);
         setUsername("");
         setPassword("");
+        setIsLoggedIn(true)
+        setUserIcon("bi bi-person-fill")
+        setLoginVisible(false)
+        showToast!("success", "Login efetuado com sucesso", "Bem-vindo " + response.data.username);
+        console.log("Logged in with username: ", response.data.username)
         setIsLoggedIn(true);
         setLoginError(false);
         console.log("Logged in with username: ", response.data.username);
@@ -109,7 +120,14 @@ const UserButtons = ({ setCartSidebarVisible }) => {
   };
 
   useEffect(() => {
-    setBadgeNumber(calculateCartItems());
+    const total = calculateCartItems()
+    setBadgeNumber(total)
+    if (total! > 0){
+      setCartIcon("bi-cart-fill")
+    }else{
+      setCartIcon("bi-cart")
+    }
+
   }, [cartContext]);
 
   const calculateCartItems = () => {
@@ -144,13 +162,13 @@ const UserButtons = ({ setCartSidebarVisible }) => {
   };
   const items = [
     {
-      label: itemRenderer("bi-person"),
+      label: itemRenderer(userIcon),
       command: (event) => {
         show(event);
       },
     },
     {
-      label: cartRenderer("bi-cart"),
+      label: cartRenderer(cartIcon),
       command: () => {
         toggleCartSidebar();
       },
@@ -163,8 +181,9 @@ const UserButtons = ({ setCartSidebarVisible }) => {
       user: null,
     });
     setIsLoggedIn(false);
-    setLoginVisible(false);
-    showToast("info", "Logout", "Efetuou logout com sucesso.");
+    setLoginVisible(false)
+    setUserIcon("bi bi-person")
+    showToast!("info", "Logout", "Efetuou logout com sucesso.")
   };
 
   return (
