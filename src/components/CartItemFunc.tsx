@@ -1,13 +1,16 @@
 import { useContext, useEffect, useReducer, useState } from "react";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
-import {CartContext, CartDispatchContext, CartItem} from "../contexts/CartContext.ts";
+import {
+  CartContext,
+  CartDispatchContext,
+  CartItem,
+} from "../contexts/CartContext.ts";
 import { ProductProps } from "./ProductCard.tsx";
 import ApiService from "../services/ApiService.ts";
 import { LoginContext, loginReducer } from "../contexts/LoginContext.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
-
 
 const CartItemFunc = ({ id, qty, price }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(Boolean);
@@ -29,24 +32,22 @@ const CartItemFunc = ({ id, qty, price }) => {
     return await ApiService.get(`/products/${id}`);
   };
   const getDbCart = async () => {
-    const cart = (await ApiService.get("/cart") ||
-        []) as CartItem[];
+    const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
     cartDispatch!({
       type: "restore",
       payload: cart,
     });
-  }
-  
+  };
+
   const handleUpdate = (factor: number) => {
     if (qty + factor === 1) {
       setIsButtonDisabled(true);
     } else if (qty + factor === 2) {
       setIsButtonDisabled(false);
     }
-    if (user){
+    if (user) {
       axiosRequest(factor);
-    }
-    else {
+    } else {
       getProduct(id).then((product: ProductProps) => {
         setProduct(product);
         console.log(product.price);
@@ -65,15 +66,13 @@ const CartItemFunc = ({ id, qty, price }) => {
   const handleDelete = async () => {
     if (user) {
       await axiosRequest(0);
-    }
-    else {
+    } else {
       cartDispatch!({
         type: "remove",
-        payload: {id, quantity: qty, price: price},
+        payload: { id, quantity: qty, price: price },
       });
     }
   };
-
 
   const axiosRequest = async (amount: number) => {
     const url = "http://localhost:8000/api/cart";
@@ -97,18 +96,18 @@ const CartItemFunc = ({ id, qty, price }) => {
 
   return (
     <>
-      <Card className="mt-2">
-        <div className="flex flex-column gap-2">
-          {/*<span>id: {id}</span>*/}
-          <span>{product?.name}</span>
-          <span>{(price*qty).toFixed(2)}€</span>
-          <div className="flex flex-row gap-2">
+      <div className="flex flex-column gap-2">
+        {/*<span>id: {id}</span>*/}
+        <span>{product?.name}</span>
+        <span>{(price * qty).toFixed(2)}€</span>
+        <div className="flex flex-row">
+          <div className="flex-grow-1 flex flex-row gap-2">
             <Button
+              icon="pi pi-minus"
+              rounded
               disabled={isButtonDisabled}
               onClick={() => handleUpdate(-1)}
-            >
-              -
-            </Button>
+            />
             <span
               style={{
                 fontSize: "20px",
@@ -119,13 +118,15 @@ const CartItemFunc = ({ id, qty, price }) => {
             >
               {qty}
             </span>
-            <Button onClick={() => handleUpdate(+1)}>+</Button>
-            <div className="ml-8">
-              <Button onClick={handleDelete}>Delete</Button>
-            </div>
+            <Button
+              icon="pi pi-plus"
+              rounded
+              onClick={() => handleUpdate(+1)}
+            />
           </div>
+              <Button icon="pi pi-trash" onClick={handleDelete}></Button>
         </div>
-      </Card>
+      </div>
     </>
   );
 };

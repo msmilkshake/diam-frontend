@@ -1,12 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Menubar } from "primereact/menubar";
 import { Button } from "primereact/button";
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import UserButtons from "./UserButtons.tsx";
+import { LoginContext } from "../contexts/LoginContext.ts";
 
-const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
+const AppNavbar = ({ setVisible, setCartSidebarVisible }) => {
   const navigate = useNavigate();
-  const items = [
+  const user = useContext(LoginContext);
+
+
+
+  const regularNavItems = [
     {
       label: "Página Inicial",
       icon: "pi pi-home",
@@ -28,8 +33,11 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
         navigate("/contact");
       },
     },
+  ];
+
+  const staffNavItems = [
     {
-      label: "Gestão Interna",
+      label: "Gestão de Loja",
       items: [
         {
           label: "Gestão de Produtos",
@@ -43,20 +51,57 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible}) => {
             navigate("/management/discounts");
           },
         },
-      ]
+      ],
     },
   ];
+
+  const adminNavItems = [
+    {
+      label: "Administração",
+      items: [
+        {
+          label: "Gestão de Utilizadores",
+          command: () => {
+            navigate("/management/procucts");
+          },
+        },
+      ],
+    },
+  ];
+
+  const [navItems, setNavItems] = useState<any[]>([])
+
+  useEffect(() => {
+    setNavItems([
+        ...regularNavItems,
+        ...(user && (user.is_staff || user?.is_superuser) ? staffNavItems : []),
+        ...(user && user?.is_superuser ? adminNavItems : []),
+    ])
+  }, [user]);
+
+  useEffect(() => {
+
+  }, []);
 
   return (
     <div className="sticky top-0 z-5">
       <Menubar
         style={{ border: "none", boxShadow: "none" }}
-        model={items}
-        start={<Button icon="pi pi-bars" onClick={() => setVisible(true)} className={`mr-4`} />}
-        end={<UserButtons setCartSidebarVisible={setCartSidebarVisible}></UserButtons>}
+        model={navItems}
+        start={
+          <Button
+            icon="pi pi-bars"
+            onClick={() => setVisible(true)}
+            className={`mr-4`}
+          />
+        }
+        end={
+          <UserButtons
+            setCartSidebarVisible={setCartSidebarVisible}
+          ></UserButtons>
+        }
       ></Menubar>
     </div>
   );
 };
-
 export default AppNavbar;

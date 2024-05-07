@@ -1,5 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import React, {useContext, useEffect, useReducer, useState} from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Badge } from "primereact/badge";
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
@@ -7,16 +7,17 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {LoginContext, LoginDispatchContext} from "../contexts/LoginContext.ts";
-import {CartContext} from "../contexts/CartContext.ts";
-import {useNavigate} from "react-router-dom";
-import {useToast} from "../contexts/ToastContext.ts";
+import {
+  LoginContext,
+  LoginDispatchContext,
+} from "../contexts/LoginContext.ts";
+import { CartContext } from "../contexts/CartContext.ts";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../contexts/ToastContext.ts";
 
-const UserButtons = ({setCartSidebarVisible}) => {
+const UserButtons = ({ setCartSidebarVisible }) => {
   const navigate = useNavigate();
-  const cartContext = useContext(CartContext)
-  const [cartItems, setCartItems] = useState(0);
-  const [visible, setVisible] = useState(false);
+  const cartContext = useContext(CartContext);
   const [dialogPos, setDialogPos] = useState({ top: "0", left: "0" });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,15 +25,15 @@ const UserButtons = ({setCartSidebarVisible}) => {
   const [loginVisible, setLoginVisible] = React.useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
-  const userDispatch = useContext(LoginDispatchContext)
-  const user = useContext(LoginContext)
+  const userDispatch = useContext(LoginDispatchContext);
+  const user = useContext(LoginContext);
 
   const showToast = useToast();
 
   useEffect(() => {
     const sessionCookie = localStorage.getItem("sessionid");
-    // console.log("session cookie:", sessionCookie);
     if (sessionCookie) {
       setIsLoggedIn(true);
     }
@@ -43,7 +44,6 @@ const UserButtons = ({setCartSidebarVisible}) => {
 
     try {
       await axios.get("http://localhost:8000/api/login");
-      // console.log("User before login:", user)
       const response = await axios.post(
         "http://localhost:8000/api/login",
         {
@@ -59,7 +59,7 @@ const UserButtons = ({setCartSidebarVisible}) => {
       );
 
       if (response.status === 200) {
-        console.log("Response true!", response)
+        console.log("Response true!", response);
         userDispatch!({
           type: "login",
           user: {
@@ -67,19 +67,20 @@ const UserButtons = ({setCartSidebarVisible}) => {
             username: response.data.username,
             is_superuser: response.data.is_superuser,
             is_staff: response.data.is_staff,
-          }
-        })
-        localStorage.setItem('sessionid', response.data.session_key);
+          },
+        });
+        localStorage.setItem("sessionid", response.data.session_key);
         setUsername("");
         setPassword("");
-        setIsLoggedIn(true)
-        setLoginVisible(false)
-        showToast!("success", "Login efetuado com sucesso", "Bem-vindo " + response.data.username);
-        console.log("Logged in with username: ", response.data.username)
+        setIsLoggedIn(true);
+        setLoginError(false);
+        console.log("Logged in with username: ", response.data.username);
       } else {
-        console.log("Login failed! response:", response)
+        setLoginError(true);
+        console.log("Login failed! response:", response);
       }
     } catch (err) {
+      setLoginError(true);
       console.log(err);
     }
   };
@@ -108,16 +109,15 @@ const UserButtons = ({setCartSidebarVisible}) => {
   };
 
   useEffect(() => {
-    setBadgeNumber(calculateCartItems())
+    setBadgeNumber(calculateCartItems());
   }, [cartContext]);
 
   const calculateCartItems = () => {
     return cartContext?.reduce((total, item) => {
       return total + item.quantity;
     }, 0);
-  }
-  const [badgeNumber, setBadgeNumber] = useState(calculateCartItems())
-
+  };
+  const [badgeNumber, setBadgeNumber] = useState(calculateCartItems());
 
   const cartRenderer = (icon) => {
     return (
@@ -141,14 +141,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
   };
   const toggleCartSidebar = () => {
     setCartSidebarVisible(true);
-  }
+  };
   const items = [
-    // {
-    //   // label: itemRenderer("bi-plus"),
-    //   // command: () => {
-    //   //   setCartItems(cartItems + 1);
-    //   // },
-    // },
     {
       label: itemRenderer("bi-person"),
       command: (event) => {
@@ -163,31 +157,14 @@ const UserButtons = ({setCartSidebarVisible}) => {
     },
   ];
 
-  const footerContent = (
-    <div>
-      <Button
-        label="No"
-        icon="pi pi-times"
-        onClick={() => setVisible(false)}
-        className="p-button-text"
-      />
-      <Button
-        label="Yes"
-        icon="pi pi-check"
-        onClick={() => setVisible(false)}
-        autoFocus
-      />
-    </div>
-  );
-
   const handleLogout = () => {
     userDispatch!({
       type: "logout",
       user: null,
-    })
+    });
     setIsLoggedIn(false);
-    setLoginVisible(false)
-    showToast("info", "Logout", "Efetuou logout com sucesso.")
+    setLoginVisible(false);
+    showToast("info", "Logout", "Efetuou logout com sucesso.");
   };
 
   return (
@@ -202,8 +179,8 @@ const UserButtons = ({setCartSidebarVisible}) => {
           visible={loginVisible}
           style={{ width: "400px", position: "fixed", ...dialogPos }}
           onHide={() => {
-            setUsername("")
-            setPassword("")
+            setUsername("");
+            setPassword("");
             setLoginVisible(false);
           }}
           // footer={footerContent}
@@ -213,8 +190,15 @@ const UserButtons = ({setCartSidebarVisible}) => {
         >
           <form onSubmit={handleSubmit}>
             <div className="flex flex-column gap-3">
+              {loginError && (
+                <div>
+                  <span style={{ color: "indianred" }}>
+                    Credenciais inválidas
+                  </span>
+                </div>
+              )}
               <div className="flex flex-column justify-content-start">
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Nome de utilizador</label>
                 <InputText
                   id="loginUsername"
                   value={username}
@@ -226,23 +210,31 @@ const UserButtons = ({setCartSidebarVisible}) => {
                 <InputText
                   type="password"
                   id="loginPassword"
+                  onFocus={() => setPassword("")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 ></InputText>
               </div>
-              <Button label="Login" type="submit" />
-              <Button onClick={(e) => {
-                e.preventDefault();
-                navigate("/signup");
-                setLoginVisible(false);
-              }} label="Signup"></Button>
+              <Button
+                disabled={!username || !password}
+                label="Iniciar sessão"
+                type="submit"
+              />
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/signup");
+                  setLoginVisible(false);
+                }}
+                label="Criar conta"
+              ></Button>
             </div>
           </form>
         </Dialog>
       )}
       {isLoggedIn && (
         <Dialog
-          header="Iniciar sessão"
+          header="Com sessão iniciada!"
           visible={loginVisible}
           style={{ width: "400px", position: "fixed", ...dialogPos }}
           onHide={() => setLoginVisible(false)}
@@ -250,8 +242,13 @@ const UserButtons = ({setCartSidebarVisible}) => {
           resizable={false}
           modal={false}
         >
-          <h2>Welcome {user?.username}!</h2>
-          <Button onClick={handleLogout}>Logout</Button>
+          <div className="flex flex-column align-content-start flex-wrap gap-3">
+            <h2>Olá {user?.username}!</h2>
+            <Button onClick={handleLogout}>Terminar sessão</Button>
+            <div className="block">
+            <Button onClick={handleLogout}>Histórico de encomendas</Button>
+            </div>
+          </div>
         </Dialog>
       )}
     </>

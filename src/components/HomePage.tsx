@@ -116,6 +116,7 @@ const HomePage = () => {
             index + 1 <= reviewRating ? `bi bi-star-fill` : `bi bi-star`
           }
           onClick={() => setReviewRating(index + 1)}
+          style={{fontSize: "1.2rem"}}
         ></i>
       );
     });
