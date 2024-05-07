@@ -154,9 +154,10 @@ export const ProductManagement = () => {
     setDialogVisible(true);
   };
 
-  const handleDelete = () => {
-    // handle delete here.
-    console.log("delete clicked");
+  const handleDelete = async () => {
+    await ApiService.delete(
+        `/products/${selectedRow?.id}`,
+        jsonHeaders)
   };
 
   const handleClearFilters = () => {
