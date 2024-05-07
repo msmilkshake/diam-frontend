@@ -31,7 +31,7 @@ const HomePage = () => {
   const getProducts = async () => {
     const response = (await ApiService.get("/discounts")) as ProductProps[];
     setProducts(response);
-    console.log(products);
+    // console.log(products);
   };
 
   useEffect(() => {
@@ -271,7 +271,7 @@ const HomePage = () => {
                 </div>
               </>
             )}
-            {!loginContext && "Faça login para avaliar este produto."}
+            {!loginContext && "Faça login para avaliar o nosso site."}
           </div>
         </div>
       </Card>

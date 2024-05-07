@@ -7,6 +7,7 @@ import ApiService from "../services/ApiService.ts";
 import { LoginContext, loginReducer } from "../contexts/LoginContext.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {Link} from "react-router-dom";
 
 
 const CartItemFunc = ({ id, qty, price }) => {
@@ -49,7 +50,7 @@ const CartItemFunc = ({ id, qty, price }) => {
     else {
       getProduct(id).then((product: ProductProps) => {
         setProduct(product);
-        console.log(product.price);
+        // console.log(product.price);
         cartDispatch!({
           type: "update",
           payload: {
@@ -87,10 +88,10 @@ const CartItemFunc = ({ id, qty, price }) => {
     let response = null;
     if (amount === 0) {
       response = await axios.put(url, data, config);
-      console.log("Item eliminado do carrinho:", response.data);
+      // console.log("Item eliminado do carrinho:", response.data);
     } else {
       response = await axios.post(url, data, config);
-      console.log("Item atualizado no carrinho:", response.data);
+      // console.log("Item atualizado no carrinho:", response.data);
     }
     getDbCart();
   };
@@ -100,7 +101,7 @@ const CartItemFunc = ({ id, qty, price }) => {
       <Card className="mt-2">
         <div className="flex flex-column gap-2">
           {/*<span>id: {id}</span>*/}
-          <span>{product?.name}</span>
+          <span><Link to={`/products/${product?.id}`}>{product?.name}</Link></span>
           <span>{(price*qty).toFixed(2)}€</span>
           <div className="flex flex-row gap-2">
             <Button
