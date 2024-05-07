@@ -1,6 +1,6 @@
 import { DataTable } from "primereact/datatable";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import ApiService, { BASE_URL } from "../services/ApiService.ts";
+import ApiService, {imageHeaders, BASE_URL, jsonHeaders} from "../services/ApiService.ts";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -8,10 +8,8 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
-import {
-  FileUpload,
-  FileUploadHandlerEvent,
-} from "primereact/fileupload";
+import { FileUpload, FileUploadHandlerEvent } from "primereact/fileupload";
+import Cookies from "js-cookie";
 
 interface ProductProps {
   id?: number;
@@ -43,14 +41,6 @@ type DropVal = {
   value: number;
 };
 
-const mandatoryFields: (keyof ProductProps)[] = [
-  "name",
-  "description",
-  "stock",
-  "price",
-  "producttype_id",
-];
-
 export const ProductManagement = () => {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [selectedRow, setSelectedRow] = useState<ProductProps | null>(null);
@@ -76,6 +66,7 @@ export const ProductManagement = () => {
   useEffect(() => {
     const fetchData = async () => {
       const products = (await ApiService.get("/products")) as ProductProps[];
+      console.log(products);
       const categoriesValues = (await ApiService.get(
         "/categories",
       )) as CategoriesProps[];
@@ -135,6 +126,7 @@ export const ProductManagement = () => {
 
   const handleAdd = () => {
     console.log("add clicked");
+    setProduct({});
     clearForm();
     setDialogVisible(true);
     console.log("add clicked");
@@ -213,23 +205,40 @@ export const ProductManagement = () => {
       price !== null &&
       stock !== null &&
       !!selectedType &&
-      !!imageToUpload;
-    console.log("Valid form:", validForm)
+      (!!imageToUpload || !!selectedRow);
+    console.log("Valid form:", validForm);
     if (!validForm) {
       setFormErrors(true);
       return;
     }
     setFormErrors(false);
+    let imageUrl = null;
+    if (imageToUpload) {
+      imageUrl = await uploadFile();
+    }
 
-    // Upload da imagem
-    const path =await uploadFile();
+    const data = {
+      ...(product.id && { id: product.id }),
+      name: name,
+      description: description,
+      price: price,
+      stock: stock,
+      producttype_id: selectedType,
+      image_url: imageUrl
+        ? imageUrl.filename
+        : product?.imageUrl?.split("/").pop(),
+    };
+    const response = product.id
+      ? await ApiService.put("/products", data, jsonHeaders)
+      : await ApiService.post("/products", data, jsonHeaders);
 
-    // Guardar o produto
-    console.log(product);
+    console.log(response)
+
     hideDialog();
   };
 
   const hideDialog = () => {
+    setImageToUpload(null);
     setDialogVisible(false);
   };
 
@@ -243,7 +252,12 @@ export const ProductManagement = () => {
         )}
         <div className="flex-grow-1">
           <Button label="Cancelar" icon="pi pi-times" onClick={hideDialog} />
-          <Button type="submit" label="Salvar" icon="pi pi-check" onClick={handleSubmit} />
+          <Button
+            type="submit"
+            label="Salvar"
+            icon="pi pi-check"
+            onClick={handleSubmit}
+          />
         </div>
       </div>
     </div>
@@ -258,7 +272,8 @@ export const ProductManagement = () => {
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("image", imageToUpload!, imageToUpload!.name);
-    return await ApiService.post("upload", formData);
+    console.log(formData);
+    return await ApiService.post("/upload", formData, imageHeaders);
   };
 
   return (
