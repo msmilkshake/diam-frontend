@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <div
               className={`flex flex-column align-items-center gap-2 ${styles.cardContent}`}
             >
-              <div className="relative">
+              <div className="relative w-full">
                 {product.discountPercent && (
                   <div className={`absolute ${styles.floatDiscount} p-3`}>
                     {product.discountPercent} %

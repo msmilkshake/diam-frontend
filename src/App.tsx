@@ -55,14 +55,11 @@ function App() {
         },
       })
       .then((response) => {
-        // console.log(response.data)
+        console.log("Response Data:", response.data)
         if (response.data.status === "valid") {
           userDispatch!({
             type: "login",
-            user: {
-              id: response.data.userid,
-              username: response.data.username,
-            },
+            user: response.data.user,
           });
         } else {
           userDispatch!({
@@ -97,7 +94,7 @@ function App() {
           <LoginContext.Provider value={user}>
             <LoginDispatchContext.Provider value={userDispatch}>
               <ToastContext.Provider value={showToast}>
-                <Toast ref={toast}></Toast>
+                <Toast ref={toast} position="top-center"></Toast>
                 <div className="App">
                   <AppNavbar
                     setCartSidebarVisible={setCartSidebarVisible}
@@ -124,7 +121,7 @@ function App() {
                             user?.is_superuser || user?.is_staff ? (
                               <ProductManagement />
                             ) : (
-                              <Unauthorized />
+                              <Forbidden />
                             )
                           }
                         />
@@ -134,7 +131,7 @@ function App() {
                             user?.is_superuser || user?.is_staff ? (
                               <ProductManagement />
                             ) : (
-                              <Unauthorized />
+                              <Forbidden />
                             )
                           }
                         />
@@ -144,7 +141,7 @@ function App() {
                             user?.is_superuser ? (
                               <ProductList />
                             ) : (
-                              <Unauthorized />
+                              <Forbidden />
                             )
                           }
                         />
@@ -169,10 +166,10 @@ function App() {
 
 export default App;
 
-const Unauthorized = () => (
+const Forbidden = () => (
   <div>
-    <h1 style={{ color: "coral" }}>Não Autorizado</h1>
-    <p>Não tem autorização para aceder a esta página.</p>
+    <h1 style={{ color: "coral" }}>403 Proibido</h1>
+    <p>Não tem permissão para aceder a esta página.</p>
   </div>
 );
 
