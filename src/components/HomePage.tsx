@@ -29,7 +29,7 @@ const HomePage = () => {
   const showToast = useToast();
 
   const getProducts = async () => {
-    const response = (await ApiService.get("/discounts")) as ProductProps[];
+    const response = (await ApiService.get("/discounted_products")) as ProductProps[];
     setProducts(response);
     // console.log(products);
   };

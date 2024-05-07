@@ -5,23 +5,17 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import ProductManageDialog from "./ProductManageDialog.tsx";
 
-export interface ProductProps {
+export interface DiscountProps {
   id?: number;
-  name?: string;
-  description?: string;
-  imageUrl?: string;
-  inStock?: boolean;
-  stock?: number;
-  price?: number;
-  rating?: number;
-  discountPrice?: number;
-  discountPercent?: number;
-  producttype_id?: number;
+  percent?: number;
+  product_id?: number;
+  is_active?: boolean;
+  product_name?: string;
 }
 
 export const ProductManagement = () => {
-  const [products, setProducts] = useState<ProductProps[]>([]);
-  const [selectedRow, setSelectedRow] = useState<ProductProps | null>(null);
+  const [discounts, setDiscounts] = useState<DiscountProps[]>([]);
+  const [selectedRow, setSelectedRow] = useState<DiscountProps | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   const [action, setAction] = useState<string>("");
@@ -33,25 +27,10 @@ export const ProductManagement = () => {
   }, [openDialog]);
 
   const reloadData = async () => {
-    const products = (await ApiService.get("/products")) as ProductProps[];
+    const products = (await ApiService.get("/discounts")) as DiscountProps[];
     console.log(products);
-    setProducts(products);
+    setDiscounts(products);
   }
-
-  const longTextTemplate = (rowData, field) => {
-    return (
-      <div
-        style={{
-          maxWidth: "240px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {rowData[field]}
-      </div>
-    );
-  };
 
   useEffect(() => {
     console.log("Selected Row", selectedRow)
@@ -71,7 +50,7 @@ export const ProductManagement = () => {
   };
 
   const handleDelete = async () => {
-    await ApiService.delete(`/products/${selectedRow?.id}`, jsonHeaders);
+    await ApiService.delete(`/discounts/${selectedRow?.id}`, jsonHeaders);
     reloadData()
   };
 
@@ -85,21 +64,21 @@ export const ProductManagement = () => {
         rounded
         icon="pi pi-plus"
         onClick={handleAdd}
-        tooltip="Adicionar novo produto"
+        tooltip="Adicionar novo desconto"
       />
       <Button
         rounded
         icon="pi pi-pencil"
         onClick={handleEdit}
         disabled={!selectedRow}
-        tooltip="Editar produto selecionado"
+        tooltip="Editar desconto selecionado"
       />
       <Button
         rounded
         icon="pi pi-trash"
         onClick={handleDelete}
         disabled={!selectedRow}
-        tooltip="Apagar produto selecionado"
+        tooltip="Apagar desconto selecionado"
       />
       <Button
         rounded
@@ -112,10 +91,10 @@ export const ProductManagement = () => {
 
   return (
     <>
-      <h1>Gestão de Produtos</h1>
+      <h1>Gestão de Descontos</h1>
       <DataTable
         ref={dt}
-        value={products}
+        value={discounts}
         selectionMode="single"
         selection={selectedRow}
         onSelectionChange={(e) => setSelectedRow(e.value)}
@@ -129,16 +108,14 @@ export const ProductManagement = () => {
       >
         <Column field="id" header="ID" filter sortable></Column>
         <Column
-          field="name"
-          header="Nome"
-          body={(data) => longTextTemplate(data, "name")}
+          field="id"
+          header="ID"
           filter
           sortable
         ></Column>
         <Column
           field="description"
           header="Descrição"
-          body={(data) => longTextTemplate(data, "description")}
           filter
           sortable
         ></Column>
