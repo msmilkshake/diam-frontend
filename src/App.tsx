@@ -30,9 +30,10 @@ import CartSidebar from "./components/CartSidebar.tsx";
 import ProductDetails from "./components/ProductDetails.tsx";
 import SignupPage from "./components/Signup.tsx";
 import ApiService from "./services/ApiService.ts";
-import { ProductManagement } from "./components/ProductManagement.tsx";
+import ProductManagement from "./components/ProductManagement.tsx";
 import { ToastContext, ToastFunction } from "./contexts/ToastContext.ts";
 import { Toast } from "primereact/toast";
+import DiscountManagement from "./components/DiscountManagement.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -129,7 +130,7 @@ function App() {
                           path="/management/discounts"
                           element={
                             user?.is_superuser || user?.is_staff ? (
-                              <ProductManagement />
+                              <DiscountManagement />
                             ) : (
                               <Forbidden />
                             )

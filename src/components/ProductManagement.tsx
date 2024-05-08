@@ -19,7 +19,7 @@ export interface ProductProps {
   producttype_id?: number;
 }
 
-export const ProductManagement = () => {
+const ProductManagement = () => {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [selectedRow, setSelectedRow] = useState<ProductProps | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -85,7 +85,7 @@ export const ProductManagement = () => {
         rounded
         icon="pi pi-plus"
         onClick={handleAdd}
-        tooltip="Adicionar novo produto"
+        tooltip="Criar novo produto"
       />
       <Button
         rounded
@@ -173,3 +173,5 @@ export const ProductManagement = () => {
     </>
   );
 };
+
+export default ProductManagement

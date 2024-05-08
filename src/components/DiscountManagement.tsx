@@ -4,6 +4,8 @@ import ApiService, { jsonHeaders } from "../services/ApiService.ts";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import ProductManageDialog from "./ProductManageDialog.tsx";
+import {Checkbox} from "primereact/checkbox";
+import DiscountManageDialog from "./DiscountManageDialog.tsx";
 
 export interface DiscountProps {
   id?: number;
@@ -13,7 +15,7 @@ export interface DiscountProps {
   product_name?: string;
 }
 
-export const ProductManagement = () => {
+export const DiscountManagement = () => {
   const [discounts, setDiscounts] = useState<DiscountProps[]>([]);
   const [selectedRow, setSelectedRow] = useState<DiscountProps | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -64,7 +66,7 @@ export const ProductManagement = () => {
         rounded
         icon="pi pi-plus"
         onClick={handleAdd}
-        tooltip="Adicionar novo desconto"
+        tooltip="Criar novo desconto"
       />
       <Button
         rounded
@@ -106,7 +108,6 @@ export const ProductManagement = () => {
         currentPageReportTemplate="{first} a {last} de {totalRecords} produtos"
         footer={footer}
       >
-        <Column field="id" header="ID" filter sortable></Column>
         <Column
           field="id"
           header="ID"
@@ -114,34 +115,33 @@ export const ProductManagement = () => {
           sortable
         ></Column>
         <Column
-          field="description"
-          header="Descrição"
+          field="product_id"
+          header="ID Produto"
           filter
           sortable
         ></Column>
-        <Column field="price" header="Preço" filter sortable></Column>
         <Column
-          field="stock"
-          header="Quantidade Stock"
+          field="product_name"
+          header="Nome do Produto"
           filter
           sortable
         ></Column>
-        <Column field="rating" header="Avaliação" filter sortable></Column>
         <Column
-          field="discountPercent"
+          field="percent"
           header="% Desconto"
           filter
           filterType="number"
           sortable
         ></Column>
         <Column
-          field="discountPrice"
-          header="Preço Desconto"
+          field="is_active"
+          header="Promoção ativa"
+          body={(data) => <Checkbox readOnly={true} checked={data.is_active}/>}
           filter
           sortable
         ></Column>
       </DataTable>
-      <ProductManageDialog
+      <DiscountManageDialog
         open={openDialog}
         setOpen={setOpenDialog}
         action={action}
@@ -150,3 +150,5 @@ export const ProductManagement = () => {
     </>
   );
 };
+
+export default DiscountManagement

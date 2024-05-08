@@ -119,6 +119,7 @@ const ProductManageDialog = ({ open, setOpen, action, selectedRow }) => {
     setSelectedCategory(0);
     setSelectedType(0);
     setImageToUpload(null);
+    setFormErrors(false)
   };
 
   useEffect(() => {
@@ -195,7 +196,7 @@ const ProductManageDialog = ({ open, setOpen, action, selectedRow }) => {
           <Button label="Cancelar" icon="pi pi-times" onClick={hideDialog} />
           <Button
             type="submit"
-            label="Salvar"
+            label="Guardar"
             icon="pi pi-check"
             onClick={handleSubmit}
           />
@@ -213,7 +214,7 @@ const ProductManageDialog = ({ open, setOpen, action, selectedRow }) => {
       header={
         <>
           {product.id && <h2>A editar produto #{product?.id}</h2>}
-          {!product.id && <h2>Adicionar novo produto</h2>}
+          {!product.id && <h2>Criar novo produto</h2>}
         </>
       }
     >
