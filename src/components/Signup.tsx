@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Password } from "primereact/password";
 import { Divider } from "primereact/divider";
 import { Dropdown } from "primereact/dropdown";
@@ -9,6 +9,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
+import {LoginContext} from "../contexts/LoginContext.ts";
 
 interface SignupFormProps {
   username: string;
@@ -28,6 +29,15 @@ const countries = ["Portugal", "Espanha"];
 const SignupPage = () => {
   const [countryDropdown, setCountryDropdown] = useState(countries[0]);
   const navigate = useNavigate();
+
+  const user = useContext(LoginContext);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(e.target.elements.username.value);

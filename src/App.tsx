@@ -34,6 +34,7 @@ import ProductManagement from "./components/ProductManagement.tsx";
 import { ToastContext, ToastFunction } from "./contexts/ToastContext.ts";
 import { Toast } from "primereact/toast";
 import DiscountManagement from "./components/DiscountManagement.tsx";
+import UserManagement from "./components/UserManagement.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -140,7 +141,7 @@ function App() {
                           path="/admin/users"
                           element={
                             user?.is_superuser ? (
-                              <ProductList />
+                              <UserManagement />
                             ) : (
                               <Forbidden />
                             )

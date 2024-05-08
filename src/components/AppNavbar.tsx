@@ -62,7 +62,7 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible }) => {
         {
           label: "Gestão de Utilizadores",
           command: () => {
-            navigate("/management/procucts");
+            navigate("/admin/users");
           },
         },
       ],
