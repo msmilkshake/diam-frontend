@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
-import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import ApiService from "../services/ApiService.js";
-import { Checkbox } from "primereact/checkbox";
-import DiscountManageDialog from "./DiscountManageDialog.tsx";
-import { UserProps } from "./UserManagement.tsx";
+import OrderManageDialog from "./OrderManageDialog.tsx";
+
 
 export interface OrderProps {
   id: number;
@@ -16,13 +14,22 @@ export interface OrderProps {
 
 const OrderPage = () => {
   const [orders, setOrders] = useState<OrderProps[]>([]);
-  const [selectedRow, setSelectedRow] = useState<OrderProps | null>(null);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [order, setOrder] = useState<OrderProps | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+
 
   const getOrders = async () => {
     const orderlist = ((await ApiService.get("/orders")) || []) as OrderProps[];
     setOrders(orderlist);
   };
+
+  const handleSelection = (e) => {
+      console.log(e.value)
+      setOrder(e.value)
+      setSelectedRow(null)
+      setOpenDialog(true)
+  }
 
   useEffect(() => {
     getOrders();
@@ -36,7 +43,7 @@ const OrderPage = () => {
         value={orders}
         selectionMode="single"
         selection={selectedRow}
-        onSelectionChange={(e) => setSelectedRow(e.value)}
+        onSelectionChange={(e) => handleSelection(e)}
         dataKey="id"
         paginator
         rows={10}
@@ -46,18 +53,17 @@ const OrderPage = () => {
       >
         <Column field="id" header="ID" filter sortable></Column>
         <Column
-          field="data"
+          field="date"
           header="Data de encomenda"
           filter
           sortable
         ></Column>
         <Column field="total" header="Total" filter sortable></Column>
       </DataTable>
-      <DiscountManageDialog
+      <OrderManageDialog
         open={openDialog}
         setOpen={setOpenDialog}
-        action={action}
-        selectedRow={selectedRow}
+        selectedRow={order}
       />
     </>
   );

@@ -266,7 +266,11 @@ const UserButtons = ({ setCartSidebarVisible }) => {
         >
           <div className="flex flex-column align-content-start flex-wrap gap-3">
             <h2>Olá {user?.username}!</h2>
-              <Button onClick={handleLogout}>Histórico de encomendas</Button>
+              <Button onClick={(e) => {
+                e.preventDefault();
+                navigate("/orders");
+                setLoginVisible(false);
+              }}>Histórico de encomendas</Button>
             <div className="block">
             <Button icon="pi pi-sign-out" onClick={handleLogout}><span className="ml-2">Terminar sessão</span></Button>
             </div>

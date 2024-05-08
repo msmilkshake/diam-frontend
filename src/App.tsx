@@ -35,6 +35,7 @@ import { ToastContext, ToastFunction } from "./contexts/ToastContext.ts";
 import { Toast } from "primereact/toast";
 import DiscountManagement from "./components/DiscountManagement.tsx";
 import UserManagement from "./components/UserManagement.tsx";
+import OrderPage from "./components/OrderPage.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -117,6 +118,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/signup" element={<SignupPage />} />
                         <Route path="/products" element={<ProductList />} />
+                        <Route path="/orders" element={<OrderPage />} />
                         <Route
                           path="/management/procucts"
                           element={
