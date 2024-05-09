@@ -186,6 +186,7 @@ const UserButtons = ({ setCartSidebarVisible }) => {
     setIsLoggedIn(false);
     setLoginVisible(false);
     setUserIcon("bi bi-person");
+    navigate("/");
     showToast!("info", "Logout", "Efetuou logout com sucesso.");
   };
 

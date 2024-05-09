@@ -1,16 +1,18 @@
 import { DataTable } from "primereact/datatable";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApiService, { jsonHeaders } from "../services/ApiService.ts";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import {Checkbox} from "primereact/checkbox";
 import DiscountManageDialog from "./DiscountManageDialog.tsx";
+import UserManageDialog from "./UserManageDialog.tsx";
 
 export interface UserProps {
   id?: number;
   username?: string;
   email?: string;
   is_staff?: boolean;
+  is_superuser?: boolean;
   is_active?: boolean;
   addressline1?: string;
   addressline2?: string;
@@ -34,9 +36,9 @@ export const UserManagement = () => {
   }, [openDialog]);
 
   const reloadData = async () => {
-    const products = (await ApiService.get("/users")) as UserProps[];
-    console.log(products);
-    setUsers(products);
+    const users = (await ApiService.get("/admin/users")) as UserProps[];
+    console.log(users);
+    setUsers(users);
   }
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export const UserManagement = () => {
   };
 
   const handleDelete = async () => {
-    await ApiService.delete(`/users/${selectedRow?.id}`, jsonHeaders);
+    await ApiService.delete(`/admin/users/${selectedRow?.id}`, jsonHeaders);
     reloadData()
   };
 
@@ -120,9 +122,35 @@ export const UserManagement = () => {
           sortable
         ></Column>
         <Column
+            field="city"
+            header="Cidade"
+            filter
+            sortable
+        ></Column>
+        <Column
+            field="country"
+            header="País"
+            filter
+            sortable
+        ></Column>
+        <Column
+            field="phone"
+            header="Telemóvel"
+            filter
+            sortable
+        ></Column>
+        <Column
           field="is_staff"
           header="Staff"
           body={(data) => <Checkbox readOnly={true} checked={data.is_staff}/>}
+          filter
+          filterType="number"
+          sortable
+        ></Column>
+        <Column
+          field="is_superuser"
+          header="Superuser"
+          body={(data) => <Checkbox readOnly={true} checked={data.is_superuser}/>}
           filter
           filterType="number"
           sortable
@@ -135,7 +163,7 @@ export const UserManagement = () => {
           sortable
         ></Column>
       </DataTable>
-      <DiscountManageDialog
+      <UserManageDialog
         open={openDialog}
         setOpen={setOpenDialog}
         action={action}
