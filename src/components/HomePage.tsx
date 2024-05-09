@@ -5,7 +5,8 @@ import { ProductProps } from "./ProductCard.tsx";
 import ApiService, { BASE_URL } from "../services/ApiService.ts";
 import { Link } from "react-router-dom";
 import { Card } from "primereact/card";
-import styles from "./ProductCard.module.css";
+import productStyles from "./ProductCard.module.css";
+import styles from "./HomePage.module.css";
 import { DataView } from "primereact/dataview";
 import { InputTextarea } from "primereact/inputtextarea";
 import { LoginContext } from "../contexts/LoginContext.ts";
@@ -113,10 +114,12 @@ const HomePage = () => {
         <i
           key={index}
           className={
-            index + 1 <= reviewRating ? `bi bi-star-fill` : `bi bi-star`
+            index + 1 <= reviewRating
+              ? `bi bi-star-fill ${styles.hoverstar}`
+              : `bi bi-star ${styles.hoverstar}`
           }
           onClick={() => setReviewRating(index + 1)}
-          style={{fontSize: "1.2rem"}}
+          style={{ fontSize: "1.2rem" }}
         ></i>
       );
     });
@@ -125,7 +128,7 @@ const HomePage = () => {
   const listTemplate = () => {
     if (!reviews || reviews.length === 0) return null;
     const list = reviews.map((review) => {
-      return reviewItem(review.review, review.rating, review.id);
+      return reviewItem(review.review, review.rating);
     });
     return (
       <div>
@@ -137,17 +140,17 @@ const HomePage = () => {
     );
   };
 
-  const reviewItem = (review, rating, index) => {
+  const reviewItem = (review, rating) => {
     return (
         <>
           <div className={`col-12 flex flex-column gap-2`}>
             <div className="flex flex-row justify-content-start ml-5 gap-4">
-              <div className={`${styles.rating}`}>
+              <div className={`${productStyles.rating}`}>
                 {getStars(rating)} {rating}/5
               </div>
             </div>
             <div
-                className={`ml-4 flex flex-row justify-content-start ${styles.italic}`}
+                className={`ml-4 flex flex-row justify-content-start ${productStyles.italic}`}
             >
               "{review}"
             </div>
@@ -164,52 +167,52 @@ const HomePage = () => {
           <Link to={`/products/${product.id}`}>
             <Card>
               <div
-                className={`flex flex-column align-items-center gap-2 ${styles.cardContent}`}
+                className={`flex flex-column align-items-center gap-2 ${productStyles.cardContent}`}
               >
                 <div className="w-fit relative">
                   {product.discountPercent && (
-                    <div className={`absolute ${styles.floatDiscount} p-3`}>
+                    <div className={`absolute ${productStyles.floatDiscount} p-3`}>
                       {product.discountPercent} %
                     </div>
                   )}
                   <img
-                    className={`${styles.cardImage}`}
+                    className={`${productStyles.cardImage}`}
                     src={`${BASE_URL}/${product.imageUrl}`}
                     alt=""
                   />
                 </div>
-                <span className={`${styles.productName} productName`}>
+                <span className={`${productStyles.productName} productName`}>
                   {product.name}
                 </span>
-                <span className={`${styles.overflowDescription} text-justify`}>
+                <span className={`${productStyles.overflowDescription} text-justify`}>
                   {product.description}
                 </span>
                 <div className="flex flex-row justify-content-between align-items-end w-full">
                   <div>
                     {product.inStock && (
-                      <span className={`${styles.inStock}`}>
+                      <span className={`${productStyles.inStock}`}>
                         <i className="bi bi-check-circle-fill"></i>
                         {" Em stock"}
                       </span>
                     )}
                     {!product.inStock && (
-                      <span className={`${styles.outOfStock}`}>
+                      <span className={`${productStyles.outOfStock}`}>
                         <i className="bi bi-x-circle-fill"></i>
                         {" Sem stock"}
                       </span>
                     )}
                   </div>
                   <div
-                    className={`flex flex-column justify-content-end align-items-end ${styles.priceContainer}`}
+                    className={`flex flex-column justify-content-end align-items-end ${productStyles.priceContainer}`}
                   >
                     {product.discountPrice && (
-                      <span className={`${styles.originalPrice}`}>
+                      <span className={`${productStyles.originalPrice}`}>
                         {product.price.toFixed(2)} €
                       </span>
                     )}
-                    <span className={`${styles.price}`}>
+                    <span className={`${productStyles.price}`}>
                       Preço:{" "}
-                      <span className={`${styles.price} ${styles.val}`}>
+                      <span className={`${productStyles.price} ${productStyles.val}`}>
                         {product.discountPrice
                           ? product.discountPrice.toFixed(2)
                           : product.price.toFixed(2)}{" "}
@@ -263,7 +266,7 @@ const HomePage = () => {
                 <div className="flex flex-row justify-content-between align-items-end w-full">
                   <div className="flex flex-column align-items-start gap-2">
                     <div
-                      className={`${styles.rating} ${styles.overall} flex flex-row gap-1`}
+                      className={`${productStyles.rating} ${productStyles.overall} flex flex-row gap-1`}
                     >
                       {starsInput()}
                     </div>

@@ -1,14 +1,12 @@
-import { useContext, useEffect, useReducer, useState } from "react";
-import { Card } from "primereact/card";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import {
-  CartContext,
   CartDispatchContext,
   CartItem,
 } from "../contexts/CartContext.ts";
 import { ProductProps } from "./ProductCard.tsx";
 import ApiService from "../services/ApiService.ts";
-import { LoginContext, loginReducer } from "../contexts/LoginContext.ts";
+import { LoginContext } from "../contexts/LoginContext.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {Link} from "react-router-dom";
@@ -92,6 +90,7 @@ const CartItemFunc = ({ id, qty, price }) => {
       response = await axios.post(url, data, config);
       // console.log("Item atualizado no carrinho:", response.data);
     }
+    console.log(response)
     getDbCart();
   };
 

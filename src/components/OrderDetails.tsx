@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ApiService from "../services/ApiService.ts";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { OrderProps } from "./OrderPage.tsx";
-import { ProductProps } from "./ProductCard.tsx";
+import { OrderProps } from "./OrdersList.tsx";
 import { Link } from "react-router-dom";
 
 interface OrderItem {
@@ -14,7 +13,7 @@ interface OrderItem {
   price: number;
 }
 
-const OrderManageDialog = ({ open, setOpen, selectedRow }) => {
+const OrderDetails = ({ open, setOpen, selectedRow }) => {
   const [visible, setVisible] = useState(false);
 
   const [order, setOrder] = useState<OrderProps>();
@@ -92,4 +91,4 @@ const OrderManageDialog = ({ open, setOpen, selectedRow }) => {
     ></Dialog>
   );
 };
-export default OrderManageDialog;
+export default OrderDetails;

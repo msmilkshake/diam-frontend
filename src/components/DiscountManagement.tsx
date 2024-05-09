@@ -104,7 +104,7 @@ export const DiscountManagement = () => {
         rows={10}
         className="p-datatable-striped"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="{first} a {last} de {totalRecords} produtos"
+        currentPageReportTemplate="{first} a {last} de {totalRecords} descontos"
         footer={footer}
       >
         <Column

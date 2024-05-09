@@ -1,5 +1,5 @@
 import { Sidebar } from "primereact/sidebar";
-import {useContext, useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import {
   CartContext,
@@ -11,11 +11,10 @@ import CartItemFunc from "./CartItemFunc.tsx";
 import { LoginContext } from "../contexts/LoginContext.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {ProductProps} from "./ProductCard.tsx";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-const CartSidebar = ({ visible, setVisible }) => {
+const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
   const cartItems = useContext(CartContext);
   const cartDispatch = useContext(CartDispatchContext);
   const user = useContext(LoginContext);
@@ -25,9 +24,9 @@ const CartSidebar = ({ visible, setVisible }) => {
     getDbCart();
   }, [user]);
   useEffect(() => {
-    let totalprice=0;
-    for(const item of cartItems!){
-      totalprice+=(item.discountPrice || item.price)*item.quantity;
+    let totalprice = 0;
+    for (const item of cartItems!) {
+      totalprice += (item.discountPrice || item.price) * item.quantity;
       // console.log(total);
     }
     setTotal(totalprice.toFixed(2));
@@ -68,6 +67,7 @@ const CartSidebar = ({ visible, setVisible }) => {
         },
       );
       // console.log("Encomenda realizada:", response.data);
+      console.log(response)
       getDbCart();
     } else {
       handleClear();
@@ -82,6 +82,11 @@ const CartSidebar = ({ visible, setVisible }) => {
         price={item.discountPrice || item.price}
       ></CartItemFunc>
     );
+  };
+
+  const showLogin = () => {
+    setVisible(false);
+    setLoginVisible(true);
   };
 
   return (
@@ -100,10 +105,21 @@ const CartSidebar = ({ visible, setVisible }) => {
             footer={
               <div className="flex flex-column gap-3">
                 <div>{cartItems?.length !== 0 && <h3>Total: {total}€</h3>}</div>
-                <div className="flex flex-row justify-content-between gap-3">
-                  <Button onClick={handleClear}>Limpar carrinho</Button>
-                  <Button onClick={handlePurchase}>Finalizar Encomenda</Button>
-                </div>
+                {cartItems?.length > 0 && (
+                  <div className="flex flex-row justify-content-between gap-3">
+                    <Button onClick={handleClear}>Limpar carrinho</Button>
+                    {user && (
+                      <Button onClick={handlePurchase}>
+                        Finalizar Encomenda
+                      </Button>
+                    )}
+                    {!user && (
+                      <Button onClick={showLogin}>
+                        Inicie sessão para encomendar
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             }
           >

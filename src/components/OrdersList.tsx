@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import ApiService from "../services/ApiService.js";
-import OrderManageDialog from "./OrderManageDialog.tsx";
-
+import OrderDetails from "./OrderDetails.tsx";
 
 export interface OrderProps {
   id: number;
@@ -12,12 +11,11 @@ export interface OrderProps {
   user_id: number;
 }
 
-const OrderPage = () => {
+const OrdersList = () => {
   const [orders, setOrders] = useState<OrderProps[]>([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [order, setOrder] = useState<OrderProps | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-
 
   const getOrders = async () => {
     const orderlist = ((await ApiService.get("/orders")) || []) as OrderProps[];
@@ -25,11 +23,11 @@ const OrderPage = () => {
   };
 
   const handleSelection = (e) => {
-      console.log(e.value)
-      setOrder(e.value)
-      setSelectedRow(null)
-      setOpenDialog(true)
-  }
+    console.log(e.value);
+    setOrder(e.value);
+    setSelectedRow(null);
+    setOpenDialog(true);
+  };
 
   useEffect(() => {
     getOrders();
@@ -49,7 +47,7 @@ const OrderPage = () => {
         rows={10}
         className="p-datatable-striped"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="{first} a {last} de {totalRecords} produtos"
+        currentPageReportTemplate="{first} a {last} de {totalRecords} encomendas"
       >
         <Column field="id" header="ID" filter sortable></Column>
         <Column
@@ -58,9 +56,15 @@ const OrderPage = () => {
           filter
           sortable
         ></Column>
-        <Column field="total" header="Total" filter sortable></Column>
+        <Column
+          field="total"
+          header="Total"
+          filter
+          sortable
+          body={(data) => `${data.total} €`}
+        ></Column>
       </DataTable>
-      <OrderManageDialog
+      <OrderDetails
         open={openDialog}
         setOpen={setOpenDialog}
         selectedRow={order}
@@ -69,4 +73,4 @@ const OrderPage = () => {
   );
 };
 
-export default OrderPage;
+export default OrdersList;

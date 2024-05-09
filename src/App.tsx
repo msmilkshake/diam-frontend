@@ -1,6 +1,5 @@
 import "./App.css";
 import React, {
-  useContext,
   useEffect,
   useReducer,
   useRef,
@@ -9,7 +8,7 @@ import React, {
 import "primeflex/primeflex.css";
 import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
-import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./components/HomePage.tsx";
 import AppNavbar from "./components/AppNavbar.tsx";
 import AppFooter from "./components/AppFooter.tsx";
@@ -35,7 +34,7 @@ import { ToastContext, ToastFunction } from "./contexts/ToastContext.ts";
 import { Toast } from "primereact/toast";
 import DiscountManagement from "./components/DiscountManagement.tsx";
 import UserManagement from "./components/UserManagement.tsx";
-import OrderPage from "./components/OrderPage.tsx";
+import OrdersList from "./components/OrdersList.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -46,6 +45,8 @@ function App() {
   const [cartItems, cartDispatch] = useReducer(cartReducer, []);
   const [user, userDispatch] = useReducer(loginReducer, null);
   // const cartDispatch = useContext(CartDispatchContext)
+
+  const [loginVisible, setLoginVisible] = React.useState(false);
 
   useEffect(() => {
     axios
@@ -103,6 +104,8 @@ function App() {
                   <AppNavbar
                     setCartSidebarVisible={setCartSidebarVisible}
                     setVisible={setAppSidebarVisible}
+                    loginVisible={loginVisible}
+                    setLoginVisible={setLoginVisible}
                   ></AppNavbar>
                   <AppSidebar
                     visible={appSidebarVisible}
@@ -111,6 +114,7 @@ function App() {
                   <CartSidebar
                     visible={cartSidebarVisible}
                     setVisible={setCartSidebarVisible}
+                    setLoginVisible={setLoginVisible}
                   ></CartSidebar>
                   <div className="flex flex-row justify-content-center">
                     <MainContent>
@@ -118,7 +122,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/signup" element={<SignupPage />} />
                         <Route path="/products" element={<ProductList />} />
-                        <Route path="/orders" element={<OrderPage />} />
+                        <Route path="/orders" element={<OrdersList />} />
                         <Route
                           path="/management/procucts"
                           element={

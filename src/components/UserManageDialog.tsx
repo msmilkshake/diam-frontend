@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ApiService, {
-  BASE_URL,
-  imageHeaders,
   jsonHeaders,
 } from "../services/ApiService.ts";
-import { FileUpload, FileUploadHandlerEvent } from "primereact/fileupload";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
-import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
-import { ProductProps } from "./ProductManagement.tsx";
-import { DiscountProps } from "./DiscountManagement.tsx";
 import { Checkbox } from "primereact/checkbox";
 import { UserProps } from "./UserManagement.tsx";
 

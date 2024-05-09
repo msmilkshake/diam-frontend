@@ -3,7 +3,7 @@ import { Sidebar } from "primereact/sidebar";
 import React, { useEffect, useState } from "react";
 import ApiService from "../services/ApiService.ts";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type SidebarItem = {
   category: string;
@@ -13,7 +13,7 @@ type SidebarItem = {
 
 const AppSidebar = ({ visible, setVisible }) => {
   const navigate = useNavigate();
-  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [menuItems, setMenuItems] = useState([]);
 
   const itemRenderer = (item) => {
     return (

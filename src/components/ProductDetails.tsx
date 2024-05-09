@@ -60,7 +60,7 @@ const ProductDetails = () => {
     // console.log("[ProductDetails]",response);
   }
 
-  const submitReview = async (review: Review) => {
+  const submitReview = async () => {
     console.log("Creating review for product: ", product!.id);
 
     const response = await axios.post(
@@ -78,6 +78,7 @@ const ProductDetails = () => {
           },
         },
     );
+    console.log(response)
     getReviews()
     showToast!("success", "Avaliação", "Avaliação submetida com sucesso")
   }
@@ -164,7 +165,7 @@ const ProductDetails = () => {
       return (
         <i key={index}
           className={
-            index + 1 <= reviewRating ? `bi bi-star-fill` : `bi bi-star`
+            index + 1 <= reviewRating ? `bi bi-star-fill ${styles.hoverstar}` : `bi bi-star ${styles.hoverstar}`
           }
           onClick={() => setReviewRating(index + 1)}
         ></i>

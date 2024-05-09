@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 
 import { InputText } from "primereact/inputtext";
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Password } from "primereact/password";
 import { Divider } from "primereact/divider";
 import { Dropdown } from "primereact/dropdown";
@@ -9,7 +9,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
-import {LoginContext} from "../contexts/LoginContext.ts";
+import { LoginContext } from "../contexts/LoginContext.ts";
+import ApiService, { jsonHeaders } from "../services/ApiService.ts";
 
 interface SignupFormProps {
   username: string;
@@ -56,9 +57,9 @@ const SignupPage = () => {
       const phone = e.target.elements.phone.value;
       const vat = e.target.elements.vat.value;
 
-      await axios.get("http://localhost:8000/api/login");
-      const response = await axios.post(
-        "http://localhost:8000/api/signup",
+      await ApiService.get("/login");
+      const response = ApiService.post(
+        "/signup",
         {
           username,
           password,
@@ -70,12 +71,7 @@ const SignupPage = () => {
           phone,
           vat,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": Cookies.get("csrftoken"),
-          },
-        },
+        jsonHeaders,
       );
       console.log("Signup successful:", response.data);
       navigate("/");

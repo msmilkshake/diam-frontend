@@ -1,5 +1,5 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Badge } from "primereact/badge";
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
@@ -15,14 +15,12 @@ import { CartContext } from "../contexts/CartContext.ts";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../contexts/ToastContext.ts";
 
-const UserButtons = ({ setCartSidebarVisible }) => {
+const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) => {
   const navigate = useNavigate();
   const cartContext = useContext(CartContext);
   const [dialogPos, setDialogPos] = useState({ top: "0", left: "0" });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const [loginVisible, setLoginVisible] = React.useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState(false);

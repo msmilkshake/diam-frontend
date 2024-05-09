@@ -1,6 +1,4 @@
 import axios from "axios";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import Cookies from "js-cookie";
 
 export const BASE_URL = "http://localhost:8000";

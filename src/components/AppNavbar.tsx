@@ -5,7 +5,7 @@ import React, {useContext, useEffect, useState} from "react";
 import UserButtons from "./UserButtons.tsx";
 import { LoginContext } from "../contexts/LoginContext.ts";
 
-const AppNavbar = ({ setVisible, setCartSidebarVisible }) => {
+const AppNavbar = ({ setVisible, setCartSidebarVisible, loginVisible, setLoginVisible }) => {
   const navigate = useNavigate();
   const user = useContext(LoginContext);
 
@@ -24,13 +24,6 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible }) => {
       icon: "pi pi-desktop",
       command: () => {
         navigate("/products");
-      },
-    },
-    {
-      label: "Contact",
-      icon: "pi pi-star",
-      command: () => {
-        navigate("/contact");
       },
     },
   ];
@@ -69,7 +62,7 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible }) => {
     },
   ];
 
-  const [navItems, setNavItems] = useState<any[]>([])
+  const [navItems, setNavItems] = useState([])
 
   useEffect(() => {
     setNavItems([
@@ -98,6 +91,8 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible }) => {
         end={
           <UserButtons
             setCartSidebarVisible={setCartSidebarVisible}
+            loginVisible={loginVisible}
+            setLoginVisible={setLoginVisible}
           ></UserButtons>
         }
       ></Menubar>

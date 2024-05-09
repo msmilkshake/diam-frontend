@@ -4,7 +4,6 @@ import ApiService, { jsonHeaders } from "../services/ApiService.ts";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import {Checkbox} from "primereact/checkbox";
-import DiscountManageDialog from "./DiscountManageDialog.tsx";
 import UserManageDialog from "./UserManageDialog.tsx";
 
 export interface UserProps {
@@ -100,7 +99,7 @@ export const UserManagement = () => {
         rows={10}
         className="p-datatable-striped"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        currentPageReportTemplate="{first} a {last} de {totalRecords} produtos"
+        currentPageReportTemplate="{first} a {last} de {totalRecords} utilizadores"
         footer={footer}
       >
         <Column
