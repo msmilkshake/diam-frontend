@@ -7,7 +7,7 @@ import {
   CartItem,
 } from "../contexts/CartContext.ts";
 import ApiService from "../services/ApiService.ts";
-import CartItemFunc from "./CartItemFunc.tsx";
+import CartItemList from "./CartItemList.tsx";
 import { LoginContext } from "../contexts/LoginContext.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -86,12 +86,13 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
   };
   const dataTemplate = (item) => {
     return (
-      <CartItemFunc
+      <CartItemList
         key={item.id}
         id={item.id}
         qty={item.quantity}
         price={item.discountPrice || item.price}
-      ></CartItemFunc>
+        setVisible={setVisible}
+      ></CartItemList>
     );
   };
 

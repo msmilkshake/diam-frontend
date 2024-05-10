@@ -8,7 +8,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 
-const CartItemFunc = ({ id, qty, price }) => {
+const CartItemList = ({ id, qty, price, setVisible }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(Boolean);
   const cartDispatch = useContext(CartDispatchContext);
   const [product, setProduct] = useState<ProductProps>();
@@ -101,7 +101,9 @@ const CartItemFunc = ({ id, qty, price }) => {
       <div className="flex flex-column gap-2">
         {/*<span>id: {id}</span>*/}
         <span>
-          <Link to={`/products/${product?.id}`}>{product?.name}</Link>
+          <Link onClick={() => setVisible(false)} to={`/products/${product?.id}`}>
+            {product?.name}
+          </Link>
         </span>
         <span>{(price * qty).toFixed(2)}€</span>
         <div className="flex flex-row">
@@ -135,4 +137,4 @@ const CartItemFunc = ({ id, qty, price }) => {
   );
 };
 
-export default CartItemFunc;
+export default CartItemList;

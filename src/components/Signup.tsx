@@ -71,7 +71,7 @@ const SignupPage = () => {
           phone,
           vat,
         },
-        jsonHeaders,
+        jsonHeaders(),
       );
       console.log("Signup successful:", response.data);
       navigate("/");

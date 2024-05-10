@@ -14,6 +14,7 @@ import {
 import { CartContext } from "../contexts/CartContext.ts";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../contexts/ToastContext.ts";
+import {BASE_URL} from "../services/ApiService.ts";
 
 const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) =
 
   const [userIcon, setUserIcon] = useState();
   const [cartIcon, setCartIcon] = useState();
+
+  const [easterEgg, setEasterEgg] = useState(false)
 
   const showToast = useToast();
 
@@ -73,6 +76,11 @@ const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) =
             is_staff: response.data.is_staff,
           },
         });
+
+        // NOT OBVIOUS
+        callEasterEgg(response.data.username);
+        // NOT OBVIOUS
+
         localStorage.setItem("sessionid", response.data.session_key);
         setUsername("");
         setPassword("");
@@ -96,6 +104,11 @@ const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) =
       setLoginError(true);
       console.log(err);
     }
+  };
+
+  const callEasterEgg = (username: string) => {
+      setEasterEgg(username === 'tomasbrandao');
+
   };
 
   useEffect(() => {
@@ -190,12 +203,17 @@ const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) =
 
   return (
     <>
+      {easterEgg && (
+        <Dialog visible={easterEgg} onHide={() => setEasterEgg(false)}>
+          <img style={{width: "60vh", height: "auto"}} src={`${BASE_URL}/static/media/sporting-campeao.png`} alt="" />
+        </Dialog>
+      )}
       <div className="flex flex-row gap-3 align-items-center">
         {user && `${user.username}`}
-      <Menubar
-        style={{ border: "none", boxShadow: "none", padding: 0 }}
-        model={items}
-      ></Menubar>
+        <Menubar
+          style={{ border: "none", boxShadow: "none", padding: 0 }}
+          model={items}
+        ></Menubar>
       </div>
       {!isLoggedIn && (
         <Dialog
@@ -268,13 +286,19 @@ const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) =
         >
           <div className="flex flex-column align-content-start flex-wrap gap-3">
             <h2>Olá {user?.username}!</h2>
-              <Button onClick={(e) => {
+            <Button
+              onClick={(e) => {
                 e.preventDefault();
                 navigate("/orders");
                 setLoginVisible(false);
-              }}>Histórico de encomendas</Button>
+              }}
+            >
+              Histórico de encomendas
+            </Button>
             <div className="block">
-            <Button icon="pi pi-sign-out" onClick={handleLogout}><span className="ml-2">Terminar sessão</span></Button>
+              <Button icon="pi pi-sign-out" onClick={handleLogout}>
+                <span className="ml-2">Terminar sessão</span>
+              </Button>
             </div>
           </div>
         </Dialog>

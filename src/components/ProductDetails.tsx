@@ -51,7 +51,7 @@ const ProductDetails = () => {
       })
       .catch((error) => console.error(error));
     getReviews();
-  }, []);
+  }, [id]);
 
   const getReviews = async () => {
     const url = `/reviews?product_id=${id}`;
