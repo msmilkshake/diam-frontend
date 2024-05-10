@@ -164,7 +164,7 @@ const HomePage = () => {
     return (
       <>
         <div className="productCard p-0 m-5 w-20 mt-3">
-          <Link to={`/products/${product.id}`}>
+          <Link to={`/products/${product.id}`} style={{textDecoration: "none"}}>
             <Card>
               <div
                 className={`flex flex-column align-items-center gap-2 ${productStyles.cardContent}`}
