@@ -13,12 +13,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import {ToastContext} from "../contexts/ToastContext.ts";
 
 const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
   const cartItems = useContext(CartContext);
   const cartDispatch = useContext(CartDispatchContext);
   const user = useContext(LoginContext);
   const [total, setTotal] = useState();
+  const showToast = useContext(ToastContext);
 
   useEffect(() => {
     getDbCart();
@@ -60,14 +62,20 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
         "http://localhost:8000/api/orders",
         {},
         {
+          validateStatus: () => true,
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": Cookies.get("csrftoken"),
           },
         },
       );
-      // console.log("Encomenda realizada:", response.data);
-      console.log(response)
+      if (response.status === 202) {
+        showToast!("warn", "Sem stock", "O produto " + response.data.name + " apenas tem " + response.data.stock + " itens em stock!");
+        // console.log(response.data);
+      }
+      if (response.status === 200){
+        showToast!("success", "Encomenda criada", response.data.details);
+      }
       getDbCart();
     } else {
       handleClear();
