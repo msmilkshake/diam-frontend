@@ -30,6 +30,7 @@ const CartItemFunc = ({ id, qty, price }) => {
     // console.log(id)
     return await ApiService.get(`/products/${id}`);
   };
+
   const getDbCart = async () => {
     const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
     cartDispatch!({

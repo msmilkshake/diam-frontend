@@ -157,8 +157,8 @@ const ProductManageDialog = ({ open, setOpen, action, selectedRow }) => {
     };
     console.log("Request data:", data);
     const response = product.id
-      ? await ApiService.put("/products", data, jsonHeaders)
-      : await ApiService.post("/products", data, jsonHeaders);
+      ? await ApiService.put("/products", data, jsonHeaders())
+      : await ApiService.post("/products", data, jsonHeaders());
 
     console.log(response);
 
@@ -181,7 +181,7 @@ const ProductManageDialog = ({ open, setOpen, action, selectedRow }) => {
     const formData = new FormData();
     formData.append("image", imageToUpload!, imageToUpload!.name);
     console.log(formData);
-    return await ApiService.post("/upload", formData, imageHeaders);
+    return await ApiService.post("/upload", formData, imageHeaders());
   };
 
   const dialogFooter = (

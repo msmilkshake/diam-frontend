@@ -108,7 +108,7 @@ const UserManageDialog = ({ open, setOpen, action, selectedRow }) => {
     };
     console.log("Request data:", data);
 
-    const response = await ApiService.put(`/admin/users`, data, jsonHeaders);
+    const response = await ApiService.put(`/admin/users`, data, jsonHeaders());
 
     console.log(response);
 

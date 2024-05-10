@@ -51,7 +51,7 @@ export const DiscountManagement = () => {
   };
 
   const handleDelete = async () => {
-    await ApiService.delete(`/discounts/${selectedRow?.id}`, jsonHeaders);
+    await ApiService.delete(`/discounts/${selectedRow?.id}`, jsonHeaders());
     reloadData()
   };
 

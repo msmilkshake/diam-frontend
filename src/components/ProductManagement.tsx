@@ -71,7 +71,7 @@ const ProductManagement = () => {
   };
 
   const handleDelete = async () => {
-    await ApiService.delete(`/products/${selectedRow?.id}`, jsonHeaders);
+    await ApiService.delete(`/products/${selectedRow?.id}`, jsonHeaders());
     reloadData()
   };
 

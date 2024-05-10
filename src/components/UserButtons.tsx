@@ -190,10 +190,13 @@ const UserButtons = ({ setCartSidebarVisible, loginVisible, setLoginVisible }) =
 
   return (
     <>
+      <div className="flex flex-row gap-3 align-items-center">
+        {user && `${user.username}`}
       <Menubar
         style={{ border: "none", boxShadow: "none", padding: 0 }}
         model={items}
       ></Menubar>
+      </div>
       {!isLoggedIn && (
         <Dialog
           header="Iniciar sessão"

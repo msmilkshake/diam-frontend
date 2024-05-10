@@ -1,5 +1,7 @@
 import { createContext, Dispatch } from "react";
 import Cookies from "js-cookie";
+import {Axios} from "axios";
+import ApiService, {jsonHeaders} from "../services/ApiService.ts";
 
 export type User = {
   id: number;
@@ -9,7 +11,7 @@ export type User = {
 };
 
 export type UserAction = {
-  type: "login" | "logout";
+  type: "login" | "logout" | "clearUser";
   user: User | null;
 };
 
@@ -24,9 +26,13 @@ export const loginReducer = (user: User | null, action: UserAction) => {
       return action.user;
     }
     case "logout":
-      Cookies.remove("csrftoken");
-      Cookies.remove("sessionid");
-      localStorage.removeItem('sessionid');
+      (async () => ApiService.post("/logout", undefined, jsonHeaders()).then(() => {
+        Cookies.remove("csrftoken");
+        Cookies.remove("sessionid");
+        localStorage.removeItem('sessionid');
+      }).catch().finally(() => null))()
+      return null;
+    case "clearUser":
       return null;
     default:
       return user;

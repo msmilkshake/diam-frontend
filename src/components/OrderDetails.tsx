@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import ApiService from "../services/ApiService.ts";
+import ApiService, { BASE_URL } from "../services/ApiService.ts";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { OrderProps } from "./OrdersList.tsx";
 import { Link } from "react-router-dom";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 interface OrderItem {
   product_id: number;
@@ -20,10 +22,8 @@ const OrderDetails = ({ open, setOpen, selectedRow }) => {
   const [items, setItems] = useState<OrderItem[]>([]);
 
   const getProducts = async () => {
-    console.log("SOU A ROW: ",selectedRow.id)
-    return (await ApiService.get(
-      `/orders/${selectedRow?.id}`,
-    )) as OrderItem[];
+    console.log("SOU A ROW: ", selectedRow.id);
+    return (await ApiService.get(`/orders/${selectedRow?.id}`)) as OrderItem[];
   };
 
   useEffect(() => {
@@ -33,11 +33,10 @@ const OrderDetails = ({ open, setOpen, selectedRow }) => {
     // (async () => {
     //   await getProducts();
     // })();
-   getProducts().then((products: OrderItem[]) => {
-     setItems(products)
-   });
+    getProducts().then((products: OrderItem[]) => {
+      setItems(products);
+    });
     setOrder(selectedRow!);
-    // console.log(items);
     setVisible(true);
   }, [open]);
 
@@ -56,6 +55,39 @@ const OrderDetails = ({ open, setOpen, selectedRow }) => {
     </div>
   );
 
+  const itemTemplate = (item) => {
+    console.log("ITEM:", item);
+    return (
+      <div className="flex flex-row justify-content-between align-items-center">
+        <div className="flex flex-row gap-4 align-items-center">
+          <img
+            src={`${BASE_URL}/${item.image_url}`}
+            alt=""
+            className="w-5rem h-5rem "
+          />
+          <div className="flex flex-column gap-2">
+            <strong style={{ fontSize: "1.2rem" }}>
+              <Link to={`/products/${item?.product_id}`}>{item?.name}</Link>
+            </strong>
+            <span>Preço: {item.price.toFixed(2)} €</span>
+          </div>
+        </div>
+        <div className="flex flex-column align-items-end gap-2">
+          <span>Quantidade:</span>
+          <strong style={{ fontSize: "1.1rem", marginRight: "0.5rem" }}>
+            {item.quantity}
+          </strong>
+        </div>
+        <div className="flex flex-column align-items-end gap-2">
+          <span>Subtotal:</span>
+          <strong style={{ fontSize: "1.1rem", marginRight: "0.5rem" }}>
+            {(item.quantity * item.price).toFixed(2)} €
+          </strong>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Dialog
       visible={visible}
@@ -67,28 +99,19 @@ const OrderDetails = ({ open, setOpen, selectedRow }) => {
           {selectedRow && (
             <div>
               <h2>Encomenda #{order?.id}</h2>
-              <div>Data: {selectedRow.date}</div>
-              <div>Total: {selectedRow.total}€</div>
-              {items &&
-                items.map((item) => (
-                  <div key={item.product_id}>
-                    <div className="flex flex-column gap-2">
-                      {/*<span>id: {id}</span>*/}
-                      <span>
-                        <Link to={`/products/${item?.product_id}`}>
-                          {item?.name}
-                        </Link>
-                      </span>
-                      <span>{(item.price * item.quantity).toFixed(2)}€</span>
-                      <span>{item.quantity}</span>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex flex-column gap-3">
+              <div>Data da encomenda: {selectedRow.date}</div>
+              <div className="text-right">Total: {selectedRow.total}€</div>
+              </div>
             </div>
           )}
         </>
       }
-    ></Dialog>
+    >
+
+      <DataTable value={items} >
+        <Column field="item" header={"Artigos encomendados"} body={itemTemplate}></Column>
+      </DataTable></Dialog>
   );
 };
 export default OrderDetails;

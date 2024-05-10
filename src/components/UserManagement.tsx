@@ -52,7 +52,7 @@ export const UserManagement = () => {
   };
 
   const handleDelete = async () => {
-    await ApiService.delete(`/admin/users/${selectedRow?.id}`, jsonHeaders);
+    await ApiService.delete(`/admin/users/${selectedRow?.id}`, jsonHeaders());
     reloadData()
   };
 

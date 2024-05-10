@@ -90,8 +90,8 @@ const ProductManageDialog = ({ open, setOpen, action, selectedRow }) => {
     console.log("Request data:", data);
 
     const response = discount.id
-      ? await ApiService.put("/discounts", data, jsonHeaders)
-      : await ApiService.post("/discounts", data, jsonHeaders);
+      ? await ApiService.put("/discounts", data, jsonHeaders())
+      : await ApiService.post("/discounts", data, jsonHeaders());
 
     console.log(response);
 

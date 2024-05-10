@@ -49,7 +49,7 @@ const OrdersList = () => {
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         currentPageReportTemplate="{first} a {last} de {totalRecords} encomendas"
       >
-        <Column field="id" header="ID" filter sortable></Column>
+        <Column field="id" header="Número da encomenda" filter sortable></Column>
         <Column
           field="date"
           header="Data de encomenda"

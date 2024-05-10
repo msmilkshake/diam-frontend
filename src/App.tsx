@@ -1,10 +1,5 @@
 import "./App.css";
-import React, {
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import "primeflex/primeflex.css";
 import AppSidebar from "./components/AppSidebar.tsx";
 import MainContent from "./components/MainContent.tsx";
@@ -35,6 +30,7 @@ import { Toast } from "primereact/toast";
 import DiscountManagement from "./components/DiscountManagement.tsx";
 import UserManagement from "./components/UserManagement.tsx";
 import OrdersList from "./components/OrdersList.tsx";
+import Cookies from "js-cookie";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -49,42 +45,42 @@ function App() {
   const [loginVisible, setLoginVisible] = React.useState(false);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/check-session", {
-        params: {
-          sessionid: localStorage.getItem("sessionid"),
-        },
-      })
-      .then((response) => {
-        if (response.data.status === "valid") {
-          userDispatch!({
-            type: "login",
-            user: {
-              id: response.data.user.id,
-              username: response.data.user.username,
-              is_staff: response.data.user.is_staff,
-              is_superuser: response.data.user.is_superuser,
-            },
-          });
-        } else {
-          userDispatch!({
-            type: "logout",
-            user: null,
-          });
-        }
-      });
-
+    ApiService.get("/check-session", {
+      params: {
+        sessionid: Cookies.get("sessionid"),
+      },
+    }).then((response) => {
+      if (response.status === "valid") {
+        userDispatch!({
+          type: "login",
+          user: {
+            id: response.user.id,
+            username: response.user.username,
+            is_staff: response.user.is_staff,
+            is_superuser: response.user.is_superuser,
+          },
+        });
+      } else {
+        userDispatch!({
+          type: "clearUser",
+          user: null,
+        });
+      }
+    });
   }, []);
 
   useEffect(() => {
     getDbCart();
   }, [user]);
+
   const getDbCart = async () => {
-    const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
-    cartDispatch({
-      type: "restore",
-      payload: cart,
-    });
+    if (user) {
+      const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
+      cartDispatch({
+        type: "restore",
+        payload: cart,
+      });
+    }
   };
   const toast = useRef<Toast>(null);
 
