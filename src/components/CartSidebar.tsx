@@ -21,9 +21,6 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
   const [total, setTotal] = useState();
 
   useEffect(() => {
-    getDbCart();
-  }, [user]);
-  useEffect(() => {
     let totalprice = 0;
     for (const item of cartItems!) {
       totalprice += (item.discountPrice || item.price) * item.quantity;
@@ -33,10 +30,12 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
   }, [cartItems]);
 
   const getDbCart = async () => {
+    console.log("[CartSidebar.tsx getDbCart]");
     const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
     cartDispatch!({
       type: "restore",
       payload: cart,
+      user: user ? "loggedin" : "anonymous",
     });
     // console.log(cart)
   };
@@ -49,9 +48,14 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
           "X-CSRFToken": Cookies.get("csrftoken"),
         },
       });
+      console.log("[CartSidebar.tsx handleClear]");
       getDbCart();
     } else {
-      cartDispatch!({ type: "clear", payload: [] });
+      cartDispatch!({
+        type: "clear",
+        payload: [],
+        user: user ? "loggedin" : "anonymous",
+      });
     }
   };
   const handlePurchase = async () => {
@@ -67,7 +71,8 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
         },
       );
       // console.log("Encomenda realizada:", response.data);
-      console.log(response)
+      console.log(response);
+      console.log("[CartSidebar.tsx handlePurchase]");
       getDbCart();
     } else {
       handleClear();

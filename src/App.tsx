@@ -69,16 +69,36 @@ function App() {
     });
   }, []);
 
+  const getLocalCart = () =>{
+    const localCart = localStorage.getItem("anonymous-cart");
+    localStorage.removeItem("user-cart")
+    if (localCart) {
+      cartDispatch!({
+        type: "restore",
+        payload: JSON.parse(localCart),
+        user: "anonymous"
+      })
+    }
+  }
+
   useEffect(() => {
-    getDbCart();
+    if (user) {
+      console.log("[App.tsx useEffect[user]] before calling getDbCart()")
+      getDbCart();
+    } else {
+      console.log("[App.tsx useEffect[user]] before calling getLocalCart()")
+      getLocalCart();
+    }
   }, [user]);
 
   const getDbCart = async () => {
     if (user) {
+      console.log('[App.tsx getDbCart]')
       const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
       cartDispatch({
         type: "restore",
         payload: cart,
+        user: "loggedin"
       });
     }
   };

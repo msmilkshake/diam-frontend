@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "primereact/button";
-import {
-  CartDispatchContext,
-  CartItem,
-} from "../contexts/CartContext.ts";
+import { CartDispatchContext, CartItem } from "../contexts/CartContext.ts";
 import { ProductProps } from "./ProductCard.tsx";
 import ApiService from "../services/ApiService.ts";
 import { LoginContext } from "../contexts/LoginContext.ts";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const CartItemFunc = ({ id, qty, price }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(Boolean);
@@ -32,10 +29,12 @@ const CartItemFunc = ({ id, qty, price }) => {
   };
 
   const getDbCart = async () => {
+    console.log("[CartItemFunc.tsx getDbCart]");
     const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
     cartDispatch!({
       type: "restore",
       payload: cart,
+      user: "loggedin",
     });
   };
 
@@ -58,6 +57,7 @@ const CartItemFunc = ({ id, qty, price }) => {
             quantity: qty + factor,
             price: product.price,
           },
+          user: user ? "loggedin" : "anonymous",
         });
       });
     }
@@ -70,6 +70,7 @@ const CartItemFunc = ({ id, qty, price }) => {
       cartDispatch!({
         type: "remove",
         payload: { id, quantity: qty, price: price },
+        user: user ? "loggedin" : "anonymous",
       });
     }
   };
@@ -91,7 +92,7 @@ const CartItemFunc = ({ id, qty, price }) => {
       response = await axios.post(url, data, config);
       // console.log("Item atualizado no carrinho:", response.data);
     }
-    console.log(response)
+    console.log(response);
     getDbCart();
   };
 
@@ -99,7 +100,9 @@ const CartItemFunc = ({ id, qty, price }) => {
     <>
       <div className="flex flex-column gap-2">
         {/*<span>id: {id}</span>*/}
-        <span><Link to={`/products/${product?.id}`}>{product?.name}</Link></span>
+        <span>
+          <Link to={`/products/${product?.id}`}>{product?.name}</Link>
+        </span>
         <span>{(price * qty).toFixed(2)}€</span>
         <div className="flex flex-row">
           <div className="flex-grow-1 flex flex-row gap-2">
@@ -125,7 +128,7 @@ const CartItemFunc = ({ id, qty, price }) => {
               onClick={() => handleUpdate(+1)}
             />
           </div>
-              <Button icon="pi pi-trash" onClick={handleDelete}></Button>
+          <Button icon="pi pi-trash" onClick={handleDelete}></Button>
         </div>
       </div>
     </>
