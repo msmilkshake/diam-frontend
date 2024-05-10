@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# DIAM Tailwag E-Store React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Developed by:
 
-Currently, two official plugins are available:
+- Miguel Silva - 105141
+- Paulo Filipe - 100502
+- Tiago Lobo - 105475
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- This project was developed with Node version `18.16.0`, so it requires at least this version or greater.
+- We used `Vite` application starter to create the project using the command:
+```shell
+npx create-vite diam-frontend --template react-ts
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Installation
+
+- Before running the app, make sure to install the required dependencies using:
+```shell
+npm install
+```
+
+- To launch the app run the following command from the project's root directory:
+```shell
+npm run dev
+```
+
+- The app will launch in the URL:  
+http://localhost:5173/
