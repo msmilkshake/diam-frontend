@@ -70,10 +70,11 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
         },
       );
       if (response.status === 202) {
-        showToast!("warn", "Sem stock", "O produto " + response.data.name + " apenas tem " + response.data.stock + " itens em stock!");
+        for (const item of response!.data.products) {
+          showToast!("warn", "Sem stock", "O produto " + item.name + " apenas tem " + item.stock + " itens em stock!");
+        }
         // console.log(response.data);
-      }
-      if (response.status === 200){
+      } else if (response.status === 200){
         showToast!("success", "Encomenda criada", response.data.details);
       }
       getDbCart();
