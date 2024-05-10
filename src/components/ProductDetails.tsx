@@ -287,7 +287,7 @@ const ProductDetails = () => {
                     className={`col-4 flex flex-column gap-2 align-items-start`}
                   >
                     <div>
-                      <InputNumber
+                      <InputNumber disabled={!product?.inStock}
                         inputStyle={{ textAlign: "center" }}
                         value={cartQty}
                         onValueChange={(e) => setCartQty(e.value)}
@@ -302,7 +302,7 @@ const ProductDetails = () => {
                       />
                     </div>
                     <div>
-                      <Button onClick={handleAddToCart} className="p-button-secondary">
+                      <Button disabled={!product?.inStock} onClick={handleAddToCart} className="p-button-secondary">
                         <div className="flex flex-row gap-2">
                           <i className="bi bi-cart" />
                           Adicionar ao carrinho
