@@ -10,6 +10,7 @@ export type CartItem = {
 export type CartAction = {
   type: "add" | "update" | "remove" | "clear" | "restore";
   payload: CartItem | CartItem[];
+  user: "anonymous" | "loggedin";
 };
 
 export const CartContext = createContext<CartItem[] | null>(null);
@@ -17,10 +18,15 @@ export const CartDispatchContext = createContext<Dispatch<CartAction> | null>(
   null,
 );
 
-export const cartReducer = (cartItems: CartItem[], action: CartAction): CartItem[] => {
+export const cartReducer = (
+  cartItems: CartItem[],
+  action: CartAction,
+): CartItem[] => {
   const filteredCartItems = cartItems.filter(
     (item) => item.id !== (action.payload as CartItem).id,
   );
+  console.log("[CART REDUCER] cartItems", cartItems);
+  console.log("[CART REDUCER] action", action);
   let results: CartItem[];
   switch (action.type) {
     case "add":
@@ -30,7 +36,11 @@ export const cartReducer = (cartItems: CartItem[], action: CartAction): CartItem
     case "update":
       results = cartItems.map((item) =>
         item.id === (action.payload as CartItem).id
-          ? { ...item, quantity: (action.payload as CartItem).quantity, price: (action.payload as CartItem).price }
+          ? {
+              ...item,
+              quantity: (action.payload as CartItem).quantity,
+              price: (action.payload as CartItem).price,
+            }
           : item,
       );
       break;
@@ -50,6 +60,8 @@ export const cartReducer = (cartItems: CartItem[], action: CartAction): CartItem
     default:
       return cartItems;
   }
-  localStorage.setItem("anonymous-cart", JSON.stringify(results))
-  return results
+
+  const cartName = action.user === "loggedin" ? "user-cart" : "anonymous-cart";
+  localStorage.setItem(cartName, JSON.stringify(results));
+  return results;
 };

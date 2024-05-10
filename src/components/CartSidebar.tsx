@@ -23,9 +23,6 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
   const showToast = useContext(ToastContext);
 
   useEffect(() => {
-    getDbCart();
-  }, [user]);
-  useEffect(() => {
     let totalprice = 0;
     for (const item of cartItems!) {
       totalprice += (item.discountPrice || item.price) * item.quantity;
@@ -39,6 +36,7 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
     cartDispatch!({
       type: "restore",
       payload: cart,
+      user: user ? "loggedin" : "anonymous",
     });
     // console.log(cart)
   };
@@ -53,7 +51,11 @@ const CartSidebar = ({ visible, setVisible, setLoginVisible }) => {
       });
       getDbCart();
     } else {
-      cartDispatch!({ type: "clear", payload: [] });
+      cartDispatch!({
+        type: "clear",
+        payload: [],
+        user: user ? "loggedin" : "anonymous",
+      });
     }
   };
   const handlePurchase = async () => {

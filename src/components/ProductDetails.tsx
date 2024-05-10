@@ -15,8 +15,8 @@ import { Checkbox } from "primereact/checkbox";
 import { LoginContext } from "../contexts/LoginContext.ts";
 import Cookies from "js-cookie";
 import axios from "axios";
-import {CartDispatchContext, CartItem} from "../contexts/CartContext.ts";
-import {useToast} from "../contexts/ToastContext.ts";
+import { CartDispatchContext, CartItem } from "../contexts/CartContext.ts";
+import { useToast } from "../contexts/ToastContext.ts";
 
 type Review = {
   review: string;
@@ -55,34 +55,33 @@ const ProductDetails = () => {
 
   const getReviews = async () => {
     const url = `/reviews?product_id=${id}`;
-    const response =  await ApiService.get(url) as Review[];
+    const response = (await ApiService.get(url)) as Review[];
     setReviews(response);
     // console.log("[ProductDetails]",response);
-  }
+  };
 
   const submitReview = async () => {
     console.log("Creating review for product: ", product!.id);
 
     const response = await axios.post(
-        "http://localhost:8000/api/reviews",
-        {
-          review: reviewComment,
-          rating: reviewRating,
-          product_id: product!.id,
-          bought: reviewBought,
+      "http://localhost:8000/api/reviews",
+      {
+        review: reviewComment,
+        rating: reviewRating,
+        product_id: product!.id,
+        bought: reviewBought,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": Cookies.get("csrftoken"),
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": Cookies.get("csrftoken"),
-          },
-        },
+      },
     );
-    console.log(response)
-    getReviews()
-    showToast!("success", "Avaliação", "Avaliação submetida com sucesso")
-  }
-
+    console.log(response);
+    getReviews();
+    showToast!("success", "Avaliação", "Avaliação submetida com sucesso");
+  };
 
   const getStars = (value: number) => {
     const intRating = Math.trunc(value);
@@ -110,7 +109,10 @@ const ProductDetails = () => {
   const reviewItem = (review, rating, bought, index) => {
     return (
       <>
-        <div key={"reviewitem" + index} className={`col-12 flex flex-column gap-2`}>
+        <div
+          key={"reviewitem" + index}
+          className={`col-12 flex flex-column gap-2`}
+        >
           <div className="flex flex-row justify-content-start ml-5 gap-4">
             <div className={`${styles.rating}`}>
               {getStars(rating)} {rating}/5
@@ -146,16 +148,18 @@ const ProductDetails = () => {
 
   const listTemplate = () => {
     if (!reviews || reviews.length === 0) return null;
-    let index = 0
-    const list = reviews.map((review) =>{
-        index++
-        return reviewItem(review.review, review.rating, review.bought, index)
+    let index = 0;
+    const list = reviews.map((review) => {
+      index++;
+      return reviewItem(review.review, review.rating, review.bought, index);
     });
-    index++
+    index++;
     return (
       <div>
         <Divider />
-        <div key={index} className="grid grid-nogutter">{list}</div>
+        <div key={index} className="grid grid-nogutter">
+          {list}
+        </div>
       </div>
     );
   };
@@ -163,9 +167,12 @@ const ProductDetails = () => {
   const starsInput = () => {
     return Array.from({ length: 5 }).map((_, index) => {
       return (
-        <i key={index}
+        <i
+          key={index}
           className={
-            index + 1 <= reviewRating ? `bi bi-star-fill ${styles.hoverstar}` : `bi bi-star ${styles.hoverstar}`
+            index + 1 <= reviewRating
+              ? `bi bi-star-fill ${styles.hoverstar}`
+              : `bi bi-star ${styles.hoverstar}`
           }
           onClick={() => setReviewRating(index + 1)}
         ></i>
@@ -173,31 +180,38 @@ const ProductDetails = () => {
     });
   };
 
-
   const handleAddToCart = async () => {
-    if (user){
+    if (user) {
       const url = "http://localhost:8000/api/cart";
-      const data = {product_id: id, quantity: cartQty};
+      const data = { product_id: id, quantity: cartQty };
       const config = {
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": Cookies.get("csrftoken"),
         },
       };
-      const response = await axios.post(url, data, config)
-      const cart = (await ApiService.get("/cart") ||
-          []) as CartItem[];
+      const response = await axios.post(url, data, config);
+      const cart = ((await ApiService.get("/cart")) || []) as CartItem[];
+      console.log("[ProductDetails.tsx handleAddToCart]");
       cartDispatch!({
         type: "restore",
         payload: cart,
+        user: user ? "loggedin" : "anonymous",
       });
-      console.log("[ProductDetails] Item adicionado ao carrinho:", response)
+      console.log("[ProductDetails] Item adicionado ao carrinho:", response);
+    } else {
+      cartDispatch!({
+        type: "add",
+        payload: {
+          id: parseInt(id!),
+          quantity: cartQty,
+          price: product!.price,
+        },
+        user: user ? "loggedin" : "anonymous",
+      });
     }
-    else{
-        cartDispatch!({type: "add", payload: {id: parseInt(id!), quantity: cartQty, price: product!.price}});
-    }
-    showToast!("success", "Carrinho", "Adicionado produto ao carrinho")
-  }
+    showToast!("success", "Carrinho", "Adicionado produto ao carrinho");
+  };
 
   return (
     <>
@@ -287,7 +301,8 @@ const ProductDetails = () => {
                     className={`col-4 flex flex-column gap-2 align-items-start`}
                   >
                     <div>
-                      <InputNumber disabled={!product?.inStock}
+                      <InputNumber
+                        disabled={!product?.inStock}
                         inputStyle={{ textAlign: "center" }}
                         value={cartQty}
                         onValueChange={(e) => setCartQty(e.value)}
@@ -302,7 +317,11 @@ const ProductDetails = () => {
                       />
                     </div>
                     <div>
-                      <Button disabled={!product?.inStock} onClick={handleAddToCart} className="p-button-secondary">
+                      <Button
+                        disabled={!product?.inStock}
+                        onClick={handleAddToCart}
+                        className="p-button-secondary"
+                      >
                         <div className="flex flex-row gap-2">
                           <i className="bi bi-cart" />
                           Adicionar ao carrinho
@@ -339,7 +358,12 @@ const ProductDetails = () => {
                 <>
                   Avalia este produto:
                   <InputTextarea
-                    style={{ minWidth: "600px", maxWidth:"600px", minHeight:"75px", maxHeight:"300px"}}
+                    style={{
+                      minWidth: "600px",
+                      maxWidth: "600px",
+                      minHeight: "75px",
+                      maxHeight: "300px",
+                    }}
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
                   />
