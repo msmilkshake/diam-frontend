@@ -127,16 +127,18 @@ const HomePage = () => {
 
   const listTemplate = () => {
     if (!reviews || reviews.length === 0) return null;
-    const list = reviews.map((review) => {
-      return reviewItem(review.review, review.rating);
+
+    const list = reviews.map((review, index) => {
+      return <div key={review.id}>{reviewItem(review.review, review.rating)}</div>;
     });
+
     return (
-      <div>
-        <Divider />
-        <div className="grid grid-nogutter">
-          {list}
+        <div>
+          <Divider />
+          <div className="grid grid-nogutter">
+            {list}
+          </div>
         </div>
-      </div>
     );
   };
 

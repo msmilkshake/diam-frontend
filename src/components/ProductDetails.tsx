@@ -22,6 +22,7 @@ type Review = {
   review: string;
   rating: number;
   bought: boolean;
+  id: number;
 };
 
 const ProductDetails = () => {
@@ -106,61 +107,51 @@ const ProductDetails = () => {
     return getStars(product!.rating);
   };
 
-  const reviewItem = (review, rating, bought, index) => {
+  const reviewItem = (review, rating, bought, id) => {
     return (
-      <>
-        <div
-          key={"reviewitem" + index}
-          className={`col-12 flex flex-column gap-2`}
-        >
+        <div key={"reviewitem" + id} className={`col-12 flex flex-column gap-2`}>
           <div className="flex flex-row justify-content-start ml-5 gap-4">
             <div className={`${styles.rating}`}>
               {getStars(rating)} {rating}/5
             </div>
             <div className={``}>
               {bought ? (
-                <>
-                  <Badge
-                    value={
-                      <i
-                        className="pi pi-check"
-                        style={{ fontSize: "0.5rem" }}
-                      />
-                    }
-                  ></Badge>{" "}
-                  Produto adquirido
-                </>
+                  <>
+                    <Badge
+                        value={
+                          <i
+                              className="pi pi-check"
+                              style={{ fontSize: "0.5rem" }}
+                          />
+                        }
+                    ></Badge>{" "}
+                    Produto adquirido
+                  </>
               ) : (
-                ""
+                  ""
               )}
             </div>
           </div>
-          <div
-            className={`ml-4 flex flex-row justify-content-start ${styles.italic}`}
-          >
+          <div className={`ml-4 flex flex-row justify-content-start ${styles.italic}`}>
             "{review}"
           </div>
+          <Divider />
         </div>
-        <Divider />
-      </>
     );
   };
 
   const listTemplate = () => {
     if (!reviews || reviews.length === 0) return null;
-    let index = 0;
     const list = reviews.map((review) => {
-      index++;
-      return reviewItem(review.review, review.rating, review.bought, index);
+      return reviewItem(review.review, review.rating, review.bought, review.id);
     });
-    index++;
     return (
-      <div>
-        <Divider />
-        <div key={index} className="grid grid-nogutter">
-          {list}
+        <div>
+          <Divider />
+          <div className="grid grid-nogutter">
+            {list}
+          </div>
         </div>
-      </div>
     );
   };
 
