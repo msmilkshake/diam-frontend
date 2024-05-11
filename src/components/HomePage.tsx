@@ -129,7 +129,7 @@ const HomePage = () => {
     if (!reviews || reviews.length === 0) return null;
 
     const list = reviews.map((review, index) => {
-      return <div key={review.id}>{reviewItem(review.review, review.rating)}</div>;
+      return <div key={review.id} className="col-12">{reviewItem(review.review, review.rating)}</div>;
     });
 
     return (
@@ -145,7 +145,7 @@ const HomePage = () => {
   const reviewItem = (review, rating) => {
     return (
         <>
-          <div className={`col-12 flex flex-column gap-2`}>
+          <div className={`flex flex-column gap-2`}>
             <div className="flex flex-row justify-content-start ml-5 gap-4">
               <div className={`${productStyles.rating}`}>
                 {getStars(rating)} {rating}/5
