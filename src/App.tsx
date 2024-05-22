@@ -31,6 +31,7 @@ import DiscountManagement from "./components/DiscountManagement.tsx";
 import UserManagement from "./components/UserManagement.tsx";
 import OrdersList from "./components/OrdersList.tsx";
 import Cookies from "js-cookie";
+import ExercicioList from "./components/ExercicioList.tsx";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -139,6 +140,7 @@ function App() {
                         <Route path="/signup" element={<SignupPage />} />
                         <Route path="/products" element={<ProductList />} />
                         <Route path="/orders" element={<OrdersList />} />
+                        <Route path="/exercicio" element={<ExercicioList />} />
                         <Route
                           path="/management/procucts"
                           element={
