@@ -26,13 +26,13 @@ const AppNavbar = ({ setVisible, setCartSidebarVisible, loginVisible, setLoginVi
         navigate("/products");
       },
     },
-    {
-      label: "Exercício",
-      icon: "pi pi-home",
-      command: () => {
-        navigate("/exercicio");
-      },
-    },
+    // {
+    //   label: "Exercício",
+    //   icon: "pi pi-home",
+    //   command: () => {
+    //     navigate("/exercicio");
+    //   },
+    // },
   ];
 
   const staffNavItems = [
